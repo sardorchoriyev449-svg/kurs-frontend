@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+body {
+  background-color: #fafafa; /* zinc-50 */
+  color: #18181b;            /* zinc-900 */
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+::selection {
+  background-color: #6366f1; /* indigo-500 */
+  color: #ffffff;
+}
+
+/* Minimalist scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e4e4e7;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d4d4d8;
+}
