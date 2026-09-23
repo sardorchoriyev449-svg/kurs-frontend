@@ -26,7 +26,7 @@ export default function ManagementPage() {
   const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
   const [isTopicEditOpen, setIsTopicEditOpen] = useState(false);
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
-  const [topicForm, setTopicForm] = useState({ name: '', order: 1 });
+  const [topicForm, setTopicForm] = useState<{ name: string; order: number | '' }>({ name: '', order: '' });
 
   // Xonalar
   const [rooms, setRooms] = useState<ClassRoom[]>([]);
@@ -119,12 +119,12 @@ export default function ManagementPage() {
     const res = await topicsApi.create({
       course_id: selectedCourseForTopic,
       name: topicForm.name,
-      order: Number(topicForm.order),
+      ...(topicForm.order !== '' ? { order: Number(topicForm.order) } : {}),
     });
     if (res.success) {
       toast.success("Mavzu qo'shildi");
       setIsTopicModalOpen(false);
-      setTopicForm({ name: '', order: 1 });
+      setTopicForm({ name: '', order: '' });
       loadTopics(selectedCourseForTopic);
     }
   };
@@ -132,7 +132,10 @@ export default function ManagementPage() {
   const handleUpdateTopic = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!activeTopic) return;
-    const res = await topicsApi.update(activeTopic._id, topicForm);
+    const res = await topicsApi.update(activeTopic._id, {
+      name: topicForm.name,
+      ...(topicForm.order !== '' ? { order: Number(topicForm.order) } : {}),
+    });
     if (res.success) {
       toast.success("Mavzu yangilandi");
       setIsTopicEditOpen(false);
@@ -527,12 +530,13 @@ export default function ManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tartib raqami</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              Tartib raqami <span className="text-zinc-400 font-normal">(bo'sh qoldirsangiz avtomatik beriladi)</span>
+            </label>
             <input
               type="number"
-              required
               value={topicForm.order}
-              onChange={(e) => setTopicForm({ ...topicForm, order: Number(e.target.value) })}
+              onChange={(e) => setTopicForm({ ...topicForm, order: e.target.value === '' ? '' : Number(e.target.value) })}
               className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
@@ -556,9 +560,8 @@ export default function ManagementPage() {
             <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tartib raqami</label>
             <input
               type="number"
-              required
               value={topicForm.order}
-              onChange={(e) => setTopicForm({ ...topicForm, order: Number(e.target.value) })}
+              onChange={(e) => setTopicForm({ ...topicForm, order: e.target.value === '' ? '' : Number(e.target.value) })}
               className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>

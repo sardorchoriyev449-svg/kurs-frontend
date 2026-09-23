@@ -49,7 +49,7 @@ export default function AdminGroupDetailPage() {
   const [loading, setLoading] = useState(true);
 
   // Muzlatilgan o'quvchilar ro'yxati (backend'dan, guruh ma'lumoti ichida keladi)
-  const suspendedIds = group?.suspended_students ?? [];
+  const suspendedIds = (group?.suspended_students ?? []).map((x) => x.student);
 
   // O'quvchi biriktirish modali
   const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);

@@ -167,7 +167,9 @@ export default function TeacherGroupFullManagementPage() {
         setAllGroupStudents(stdRes.data);
 
         // Faol o'quvchilar (to'lov qilganlar)
-        const suspendedIds = grpRes.success && grpRes.data ? grpRes.data.suspended_students ?? [] : [];
+        const suspendedIds = grpRes.success && grpRes.data
+          ? (grpRes.data.suspended_students ?? []).map((x) => x.student)
+          : [];
         const actives = stdRes.data.filter((s) => !suspendedIds.includes(s._id));
         setActiveStudents(actives);
 
@@ -376,7 +378,7 @@ export default function TeacherGroupFullManagementPage() {
     const res = await homeworkAssignmentsApi.getStatus(assignment._id);
     if (res.success && res.data) {
       const activeReviewList = res.data.filter(
-        (item) => !(group?.suspended_students ?? []).includes(item.student._id)
+        (item) => !(group?.suspended_students ?? []).some((x) => x.student === item.student._id)
       );
       setReviewList(activeReviewList);
       setReviewModalOpen(true);
@@ -402,7 +404,7 @@ export default function TeacherGroupFullManagementPage() {
       const updated = await homeworkAssignmentsApi.getStatus(activeAssignmentForReview._id);
       if (updated.success && updated.data) {
         const activeReviewList = updated.data.filter(
-          (item) => !(group?.suspended_students ?? []).includes(item.student._id)
+          (item) => !(group?.suspended_students ?? []).some((x) => x.student === item.student._id)
         );
         setReviewList(activeReviewList);
       }

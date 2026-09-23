@@ -61,7 +61,7 @@ export default function TeacherAllStudentsPage() {
 
   const activeStudents = students.filter((s) => {
     const grp = groups.find((g) => g._id === s.groupId);
-    return !(grp?.suspended_students ?? []).includes(s._id);
+    return !(grp?.suspended_students ?? []).some((x) => x.student === s._id);
   });
 
   const filteredStudents = activeStudents.filter((s) => {

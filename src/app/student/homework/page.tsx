@@ -102,8 +102,8 @@ export default function StudentHomeworkPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedAssignment) return;
-    if (!submitForm.file_name) {
-      toast.error("Iltimos, vazifa faylini yuklang");
+    if (!submitForm.file_name && !submitForm.description.trim()) {
+      toast.error("Iltimos, fayl yuklang yoki izoh yozing");
       return;
     }
 
@@ -270,7 +270,6 @@ export default function StudentHomeworkPage() {
             </label>
             <textarea
               rows={3}
-              required
               value={submitForm.description}
               onChange={(e) => setSubmitForm({ ...submitForm, description: e.target.value })}
               placeholder="Vazifa qanday bajarilgani haqida qisqacha izoh..."
@@ -280,11 +279,10 @@ export default function StudentHomeworkPage() {
 
           <div>
             <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              Bajarilgan ish fayli (zip, rar, 7z, pdf, rasm)
+              Bajarilgan ish fayli (zip, rar, 7z, pdf, rasm) <span className="text-zinc-400 font-normal">(ixtiyoriy, izoh yozsangiz ham bo'ladi)</span>
             </label>
             <input
               type="file"
-              required
               onChange={handleFileUpload}
               className="w-full text-xs text-zinc-500 dark:text-zinc-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:dark:bg-zinc-800 hover:file:bg-zinc-200 hover:file:dark:bg-zinc-700 cursor-pointer"
             />

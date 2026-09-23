@@ -33,7 +33,9 @@ export interface Group {
   lesson_days: string[];
   teacher?: string | Partial<User>;
   students: (string | Partial<User>)[];
-  suspended_students?: string[];
+  // Har bir yozuv: qaysi talaba, qachon (aniq vaqt) muzlatilgan.
+  // Shu vaqtgacha yaratilgan darslar/vazifalar talabaga ko'rinishda qoladi.
+  suspended_students?: { student: string; suspended_at: string }[];
   course_id: string | { _id: string; name: string; price: number };
 }
 
