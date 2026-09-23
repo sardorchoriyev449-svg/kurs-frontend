@@ -33,10 +33,16 @@ export interface Group {
   lesson_days: string[];
   teacher?: string | Partial<User>;
   students: (string | Partial<User>)[];
-  // Har bir yozuv: qaysi talaba, qachon (aniq vaqt) muzlatilgan.
-  // Shu vaqtgacha yaratilgan darslar/vazifalar talabaga ko'rinishda qoladi.
-  suspended_students?: { student: string; suspended_at: string }[];
   course_id: string | { _id: string; name: string; price: number };
+}
+
+// Bitta guruh doirasida bir talabaning muzlatish yozuvi (alohida "freeze"
+// kolleksiyasida saqlanadi). Yozuv mavjudligi = hozir muzlatilgan degani.
+export interface Freeze {
+  _id: string;
+  group: string;
+  student: string | Partial<User>;
+  suspended_at: string;
 }
 
 export interface Lesson {

@@ -12,7 +12,8 @@ import {
   Gift,
   HomeworkAssignment,
   Homework,
-  Staff
+  Staff,
+  Freeze
 } from '../types';
 
 // Barcha so'rovlar shu frontend domenidan /api orqali ketadi (next.config.ts rewrites
@@ -80,8 +81,14 @@ export const groupsApi = {
     request<Group>(`/groups/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   addStudents: (id: string, students: string[]) =>
     request<Group>(`/groups/${id}/add-students`, { method: 'POST', body: JSON.stringify({ students }) }),
-  setSuspension: (groupId: string, studentId: string, suspended: boolean) =>
-    request(`/groups/${groupId}/students/${studentId}/suspension`, { method: 'PUT', body: JSON.stringify({ suspended }) }),
+};
+
+export const freezeApi = {
+  getByGroup: (groupId: string) => request<Freeze[]>(`/freeze/group/${groupId}`),
+  create: (groupId: string, studentId: string) =>
+    request<Freeze>('/freeze', { method: 'POST', body: JSON.stringify({ group: groupId, student: studentId }) }),
+  delete: (groupId: string, studentId: string) =>
+    request(`/freeze/group/${groupId}/student/${studentId}`, { method: 'DELETE' }),
 };
 
 export const coursesApi = {

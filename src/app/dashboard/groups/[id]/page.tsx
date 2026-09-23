@@ -9,9 +9,10 @@ import {
   lessonsApi,
   gradesApi,
   attendanceApi,
-  classRoomsApi
+  classRoomsApi,
+  freezeApi
 } from '@/lib/api';
-import { Group, User, Course, Lesson, AttendanceStatus, ClassRoom } from '@/types';
+import { Group, User, Course, Lesson, AttendanceStatus, ClassRoom, Freeze } from '@/types';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -48,8 +49,9 @@ export default function AdminGroupDetailPage() {
   const [selectedLesson, setSelectedLesson] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
-  // Muzlatilgan o'quvchilar ro'yxati (backend'dan, guruh ma'lumoti ichida keladi)
-  const suspendedIds = (group?.suspended_students ?? []).map((x) => x.student);
+  // Muzlatilgan o'quvchilar ro'yxati (alohida "freeze" kolleksiyasidan)
+  const [freezes, setFreezes] = useState<Freeze[]>([]);
+  const suspendedIds = freezes.map((f) => (typeof f.student === 'string' ? f.student : f.student._id!));
 
   // O'quvchi biriktirish modali
   const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
@@ -77,7 +79,7 @@ export default function AdminGroupDetailPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const [grpRes, stdRes, lsnRes, allStdRes, usrRes, crsRes, roomsRes] = await Promise.all([
+      const [grpRes, stdRes, lsnRes, allStdRes, usrRes, crsRes, roomsRes, frzRes] = await Promise.all([
         groupsApi.getOne(id),
         groupsApi.getStudents(id),
         lessonsApi.getByGroup(id),
@@ -85,6 +87,7 @@ export default function AdminGroupDetailPage() {
         usersApi.getAll(),
         coursesApi.getAll(),
         classRoomsApi.getAll(),
+        freezeApi.getByGroup(id),
       ]);
 
       if (grpRes.success && grpRes.data) setGroup(grpRes.data);
@@ -93,6 +96,7 @@ export default function AdminGroupDetailPage() {
       if (usrRes.success && usrRes.data) setAllUsers(usrRes.data);
       if (crsRes.success && crsRes.data) setCourses(crsRes.data);
       if (roomsRes.success && roomsRes.data) setRooms(roomsRes.data);
+      if (frzRes.success && frzRes.data) setFreezes(frzRes.data);
 
       if (lsnRes.success && lsnRes.data) {
         setLessons(lsnRes.data);
@@ -114,7 +118,9 @@ export default function AdminGroupDetailPage() {
   // MUZLATISH / FAOLLASHTIRISH BOSILGANDA:
   const handleToggleSuspend = async (studentId: string, studentName: string) => {
     const isCurrentlySuspended = suspendedIds.includes(studentId);
-    const res = await groupsApi.setSuspension(id, studentId, !isCurrentlySuspended);
+    const res = isCurrentlySuspended
+      ? await freezeApi.delete(id, studentId)
+      : await freezeApi.create(id, studentId);
 
     if (!res.success) {
       toast.error(res.message || "Holatni o'zgartirib bo'lmadi");

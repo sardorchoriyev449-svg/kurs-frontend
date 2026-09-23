@@ -11,7 +11,8 @@ import {
   homeworkApi,
   uploadApi,
   attendanceApi,
-  gradesApi
+  gradesApi,
+  freezeApi
 } from '@/lib/api';
 import {
   Group,
@@ -21,7 +22,8 @@ import {
   User,
   HomeworkAssignment,
   Homework,
-  AttendanceStatus
+  AttendanceStatus,
+  Freeze
 } from '@/types';
 import { getRelationId } from '@/lib/utils';
 import { useToast } from '@/contexts/ToastContext';
@@ -62,6 +64,8 @@ export default function TeacherGroupFullManagementPage() {
   const [assignments, setAssignments] = useState<HomeworkAssignment[]>([]);
   const [selectedLessonId, setSelectedLessonId] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [freezes, setFreezes] = useState<Freeze[]>([]);
+  const suspendedIds = freezes.map((f) => (typeof f.student === 'string' ? f.student : f.student._id!));
 
   // 1. Dars qo'shish modal holati
   const [isLessonModalOpen, setIsLessonModalOpen] = useState(false);
@@ -144,15 +148,20 @@ export default function TeacherGroupFullManagementPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const [grpRes, stdRes, lsnRes, hmwRes, crsRes] = await Promise.all([
+      const [grpRes, stdRes, lsnRes, hmwRes, crsRes, frzRes] = await Promise.all([
         groupsApi.getOne(groupId),
         groupsApi.getStudents(groupId),
         lessonsApi.getByGroup(groupId),
         homeworkAssignmentsApi.getByGroup(groupId),
         coursesApi.getAll(),
+        freezeApi.getByGroup(groupId),
       ]);
 
       if (crsRes.success && crsRes.data) setCourses(crsRes.data);
+
+      const groupFreezes = frzRes.success && frzRes.data ? frzRes.data : [];
+      setFreezes(groupFreezes);
+      const groupSuspendedIds = groupFreezes.map((f) => (typeof f.student === 'string' ? f.student : f.student._id!));
 
       if (grpRes.success && grpRes.data) {
         setGroup(grpRes.data);
@@ -167,10 +176,7 @@ export default function TeacherGroupFullManagementPage() {
         setAllGroupStudents(stdRes.data);
 
         // Faol o'quvchilar (to'lov qilganlar)
-        const suspendedIds = grpRes.success && grpRes.data
-          ? (grpRes.data.suspended_students ?? []).map((x) => x.student)
-          : [];
-        const actives = stdRes.data.filter((s) => !suspendedIds.includes(s._id));
+        const actives = stdRes.data.filter((s) => !groupSuspendedIds.includes(s._id));
         setActiveStudents(actives);
 
         const attMap: { [id: string]: AttendanceStatus } = {};
@@ -378,7 +384,7 @@ export default function TeacherGroupFullManagementPage() {
     const res = await homeworkAssignmentsApi.getStatus(assignment._id);
     if (res.success && res.data) {
       const activeReviewList = res.data.filter(
-        (item) => !(group?.suspended_students ?? []).some((x) => x.student === item.student._id)
+        (item) => !suspendedIds.includes(item.student._id)
       );
       setReviewList(activeReviewList);
       setReviewModalOpen(true);
@@ -404,7 +410,7 @@ export default function TeacherGroupFullManagementPage() {
       const updated = await homeworkAssignmentsApi.getStatus(activeAssignmentForReview._id);
       if (updated.success && updated.data) {
         const activeReviewList = updated.data.filter(
-          (item) => !(group?.suspended_students ?? []).some((x) => x.student === item.student._id)
+          (item) => !suspendedIds.includes(item.student._id)
         );
         setReviewList(activeReviewList);
       }
@@ -668,6 +674,9 @@ export default function TeacherGroupFullManagementPage() {
                       </span>
                       <span className="text-emerald-600 dark:text-emerald-400 font-medium">
                         Qabul qilingan: {assignment.accepted_count || 0} ta
+                      </span>
+                      <span className="text-rose-600 dark:text-rose-400 font-medium">
+                        Topshirmaganlar: {Math.max(0, activeStudents.length - (assignment.submitted_count || 0))} ta
                       </span>
                     </div>
                   </div>

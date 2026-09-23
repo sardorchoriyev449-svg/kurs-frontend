@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { groupsApi } from '@/lib/api';
+import { groupsApi, freezeApi } from '@/lib/api';
 import { Group, User } from '@/types';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -18,6 +18,8 @@ export default function TeacherAllStudentsPage() {
   const [selectedGroup, setSelectedGroup] = useState<string>('all');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  // "groupId:studentId" formatida - shu guruhda muzlatilgan o'quvchilar
+  const [suspendedKeys, setSuspendedKeys] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     async function loadAllTeacherStudents() {
@@ -26,10 +28,14 @@ export default function TeacherAllStudentsPage() {
         if (grpRes.success && grpRes.data) {
           setGroups(grpRes.data);
           const studentList: StudentWithGroup[] = [];
+          const suspended = new Set<string>();
 
-          // Har bir guruh talabalarini yuklab birlashtirish
+          // Har bir guruh talabalarini va muzlatilganlar ro'yxatini yuklab birlashtirish
           for (const g of grpRes.data) {
-            const stdRes = await groupsApi.getStudents(g._id);
+            const [stdRes, frzRes] = await Promise.all([
+              groupsApi.getStudents(g._id),
+              freezeApi.getByGroup(g._id),
+            ]);
             if (stdRes.success && stdRes.data) {
               stdRes.data.forEach((s) => {
                 studentList.push({
@@ -39,8 +45,15 @@ export default function TeacherAllStudentsPage() {
                 });
               });
             }
+            if (frzRes.success && frzRes.data) {
+              frzRes.data.forEach((f) => {
+                const studentId = typeof f.student === 'string' ? f.student : f.student._id!;
+                suspended.add(`${g._id}:${studentId}`);
+              });
+            }
           }
           setStudents(studentList);
+          setSuspendedKeys(suspended);
         }
       } catch (err) {
         console.error("Talabalarni yuklashda xatolik:", err);
@@ -59,10 +72,7 @@ export default function TeacherAllStudentsPage() {
     return `+998 ${phone}`;
   };
 
-  const activeStudents = students.filter((s) => {
-    const grp = groups.find((g) => g._id === s.groupId);
-    return !(grp?.suspended_students ?? []).some((x) => x.student === s._id);
-  });
+  const activeStudents = students.filter((s) => !suspendedKeys.has(`${s.groupId}:${s._id}`));
 
   const filteredStudents = activeStudents.filter((s) => {
     const matchesGroup = selectedGroup === 'all' || s.groupId === selectedGroup;
