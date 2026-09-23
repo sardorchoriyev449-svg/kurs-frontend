@@ -306,7 +306,7 @@ export default function UsersPage() {
                         <option value="viwer">viwer</option>
                         <option value="student">student</option>
                         <option value="teacher">teacher</option>
-                        <option value="admin">admin</option>
+                        {currentUser?.role === 'super_admin' && <option value="admin">admin</option>}
                       </select>
                     </td>
                     <td className="px-6 py-4 text-right">
