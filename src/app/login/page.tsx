@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { Required } from '@/components/ui/Required';
 import { GraduationCap, Lock, User as UserIcon, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
@@ -36,7 +37,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-              Login
+              Login <Required />
             </label>
             <div className="relative">
               <UserIcon className="w-4 h-4 text-zinc-400 dark:text-zinc-500 absolute left-3.5 top-3" />
@@ -53,7 +54,7 @@ export default function LoginPage() {
 
           <div>
             <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-              Parol
+              Parol <Required />
             </label>
             <div className="relative">
               <Lock className="w-4 h-4 text-zinc-400 dark:text-zinc-500 absolute left-3.5 top-3" />

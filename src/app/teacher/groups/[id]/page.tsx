@@ -31,6 +31,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Badge, EmptyState } from '@/components/ui/EmptyState';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { Required } from '@/components/ui/Required';
 import {
   BookOpen,
   Plus,
@@ -267,21 +268,18 @@ export default function TeacherGroupFullManagementPage() {
 
   const handleSaveLessonWithAttendance = async (e: React.FormEvent) => {
     e.preventDefault();
-    let finalTopicId = lessonForm.topic_id || undefined;
 
-    if (lessonForm.topic_mode === 'custom' && lessonForm.new_topic_name.trim()) {
-      const courseId = getRelationId(group?.course_id);
-      const topRes = await topicsApi.create({
-        course_id: courseId,
-        name: lessonForm.new_topic_name.trim()
-      });
-      if (topRes.success && topRes.data) {
-        finalTopicId = topRes.data._id;
-      }
-    }
+    // "Rejadan" tanlansa - admin yaratgan rasmiy mavzuga (reja) bog'lanadi.
+    // "+ Yangi" tanlansa - bu rejadan tashqari dars, shuning uchun yangi
+    // "rasmiy" mavzu (Topic) YARATILMAYDI, faqat kiritilgan nom darsning
+    // o'z nomi sifatida ishlatiladi (topic_id bo'sh qoladi).
+    const finalTopicId = lessonForm.topic_mode === 'select' ? (lessonForm.topic_id || undefined) : undefined;
+    const finalName = lessonForm.name.trim()
+      || (lessonForm.topic_mode === 'custom' ? lessonForm.new_topic_name.trim() : '')
+      || undefined;
 
     const lsnRes = await lessonsApi.create({
-      name: lessonForm.name.trim() || undefined,
+      name: finalName,
       description: lessonForm.description.trim() || undefined,
       group_id: groupId,
       topic_id: finalTopicId,
@@ -848,7 +846,7 @@ export default function TeacherGroupFullManagementPage() {
       <Modal isOpen={isAssignmentModalOpen} onClose={() => setIsAssignmentModalOpen(false)} title="Yangi uy vazifasi yaratish">
         <form onSubmit={handleCreateAssignment} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mavzu nomi / Sarlavha</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mavzu nomi / Sarlavha <Required /></label>
             <input
               required
               value={assignmentForm.title}
@@ -860,7 +858,7 @@ export default function TeacherGroupFullManagementPage() {
 
           <div>
             <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              O'quv rejadagi mavzu <span className="text-zinc-400 font-normal">(ixtiyoriy, tanlansa sarlavha shu nom bilan to'ldiriladi)</span>
+              O'quv rejadagi mavzu <span className="text-zinc-400 font-normal">(tanlansa sarlavha shu nom bilan to'ldiriladi)</span>
             </label>
             <select
               value={assignmentForm.topic_id}
@@ -893,7 +891,7 @@ export default function TeacherGroupFullManagementPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Vazifa sharti va tavsifi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Vazifa sharti va tavsifi <Required /></label>
             <textarea
               rows={3}
               required
@@ -1040,7 +1038,7 @@ export default function TeacherGroupFullManagementPage() {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Dars nomi <span className="text-zinc-400 font-normal">(ixtiyoriy, mavzu tanlansa shu nom bo'ladi)</span>
+                Dars nomi <span className="text-zinc-400 font-normal">(mavzu tanlansa shu nom bo'ladi)</span>
               </label>
               <input
                 value={lessonForm.name}
@@ -1049,7 +1047,7 @@ export default function TeacherGroupFullManagementPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sana</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sana <Required /></label>
               <input
                 type="date"
                 required
@@ -1095,7 +1093,7 @@ export default function TeacherGroupFullManagementPage() {
                 }}
                 className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               >
-                <option value="">Tanlang (ixtiyoriy)</option>
+                <option value="">Tanlang</option>
                 {availableTopics.map((t) => (
                   <option key={t._id} value={t._id}>{t.name}</option>
                 ))}
@@ -1116,9 +1114,7 @@ export default function TeacherGroupFullManagementPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              Dars tavsifi <span className="text-zinc-400 font-normal">(ixtiyoriy)</span>
-            </label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars tavsifi</label>
             <textarea
               rows={2}
               value={lessonForm.description}
@@ -1186,7 +1182,7 @@ export default function TeacherGroupFullManagementPage() {
       <Modal isOpen={isLessonEditOpen} onClose={() => setIsLessonEditOpen(false)} title="Darsni tahrirlash">
         <form onSubmit={handleUpdateLesson} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars nomi <Required /></label>
             <input
               required
               value={lessonEditForm.name}
@@ -1195,7 +1191,7 @@ export default function TeacherGroupFullManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sana</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sana <Required /></label>
             <input
               type="date"
               required
@@ -1208,7 +1204,6 @@ export default function TeacherGroupFullManagementPage() {
             <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tavsif</label>
             <textarea
               rows={3}
-              required
               value={lessonEditForm.description}
               onChange={(e) => setLessonEditForm({ ...lessonEditForm, description: e.target.value })}
               className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"

@@ -279,7 +279,7 @@ export default function StudentHomeworkPage() {
 
           <div>
             <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              Bajarilgan ish fayli (zip, rar, 7z, pdf, rasm) <span className="text-zinc-400 font-normal">(ixtiyoriy, izoh yozsangiz ham bo'ladi)</span>
+              Bajarilgan ish fayli (zip, rar, 7z, pdf, rasm)
             </label>
             <input
               type="file"

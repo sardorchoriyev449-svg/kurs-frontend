@@ -7,6 +7,7 @@ import { Group, Course, User } from '@/types';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import { Required } from '@/components/ui/Required';
 import { Plus, Users, Clock, ArrowRight } from 'lucide-react';
 
 export default function GroupsPage() {
@@ -181,7 +182,7 @@ export default function GroupsPage() {
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Yangi guruh yaratish">
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Guruh nomi (min 5)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Guruh nomi (min 5) <Required /></label>
             <input
               required
               minLength={5}
@@ -193,7 +194,7 @@ export default function GroupsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Kurs</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Kurs <Required /></label>
             <select
               required
               value={form.course_id}
@@ -214,7 +215,7 @@ export default function GroupsPage() {
               onChange={(e) => setForm({ ...form, teacher: e.target.value })}
               className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             >
-              <option value="">O'qituvchini biriktirish (ixtiyoriy)</option>
+              <option value="">O'qituvchini biriktirish</option>
               {teachers.map((t) => (
                 <option key={t._id} value={t._id}>{t.first_name} {t.last_name}</option>
               ))}
@@ -222,7 +223,7 @@ export default function GroupsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars vaqti</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars vaqti <Required /></label>
             <input
               required
               value={form.lesson_time}
@@ -234,7 +235,7 @@ export default function GroupsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Dars kunlari</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Dars kunlari <Required /></label>
             <div className="flex flex-wrap gap-2">
               {['Du', 'Se', 'Chor', 'Pay', 'Ju', 'Sha', 'Yak'].map((d) => {
                 const active = form.lesson_days.includes(d);

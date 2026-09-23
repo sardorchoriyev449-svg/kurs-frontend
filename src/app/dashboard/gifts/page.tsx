@@ -6,6 +6,7 @@ import { Gift, User } from '@/types';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import { Required } from '@/components/ui/Required';
 import { Coins, Plus, Send, Edit3, Trash2 } from 'lucide-react';
 
 export default function AdminGiftsPage() {
@@ -225,7 +226,7 @@ export default function AdminGiftsPage() {
           <form onSubmit={handleGiveCoins} className="space-y-4">
             <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">O'quvchiga koin berish yoki ayirish</h3>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">O'quvchini tanlang</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">O'quvchini tanlang <Required /></label>
               <select
                 required
                 value={coinForm.student_id}
@@ -240,7 +241,7 @@ export default function AdminGiftsPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Koin miqdori (manfiy son ham mumkin: masalan -20)
+                Koin miqdori (manfiy son ham mumkin: masalan -20) <Required />
               </label>
               <input
                 type="number"
@@ -251,7 +252,7 @@ export default function AdminGiftsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sabab / Izoh</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sabab / Izoh <Required /></label>
               <input
                 required
                 value={coinForm.reason}
@@ -269,7 +270,7 @@ export default function AdminGiftsPage() {
       <Modal isOpen={isGiftModalOpen} onClose={() => setIsGiftModalOpen(false)} title="Yangi sovg'a qo'shish">
         <form onSubmit={handleCreateGift} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sovg'a nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sovg'a nomi <Required /></label>
             <input
               required
               value={giftForm.name}
@@ -279,7 +280,7 @@ export default function AdminGiftsPage() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Narxi (koin)</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Narxi (koin) <Required /></label>
               <input
                 type="number"
                 required
@@ -290,7 +291,7 @@ export default function AdminGiftsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Zaxira soni</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Zaxira soni <Required /></label>
               <input
                 type="number"
                 required
@@ -318,7 +319,7 @@ export default function AdminGiftsPage() {
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} title="Sovg'ani tahrirlash">
         <form onSubmit={handleUpdateGift} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sovg'a nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sovg'a nomi <Required /></label>
             <input
               required
               value={editGiftForm.name}
@@ -328,7 +329,7 @@ export default function AdminGiftsPage() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Narxi (koin)</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Narxi (koin) <Required /></label>
               <input
                 type="number"
                 required
@@ -339,7 +340,7 @@ export default function AdminGiftsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Zaxira soni</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Zaxira soni <Required /></label>
               <input
                 type="number"
                 required

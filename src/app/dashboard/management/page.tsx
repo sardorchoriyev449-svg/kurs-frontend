@@ -7,6 +7,7 @@ import { formatPrice } from '@/lib/utils';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import { Required } from '@/components/ui/Required';
 import { Plus, Trash2, Edit3, Layers, BookCheck, DoorOpen, Briefcase } from 'lucide-react';
 
 export default function ManagementPage() {
@@ -487,7 +488,7 @@ export default function ManagementPage() {
       >
         <form onSubmit={isCourseEditOpen ? handleUpdateCourse : handleCreateCourse} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Kurs nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Kurs nomi <Required /></label>
             <input
               required
               value={courseForm.name}
@@ -496,7 +497,7 @@ export default function ManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Oylik to'lov narxi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Oylik to'lov narxi <Required /></label>
             <input
               type="number"
               required
@@ -506,7 +507,7 @@ export default function ManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tavsif</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tavsif <Required /></label>
             <textarea
               rows={2}
               required
@@ -523,7 +524,7 @@ export default function ManagementPage() {
       <Modal isOpen={isTopicModalOpen} onClose={() => setIsTopicModalOpen(false)} title="Yangi mavzu qo'shish">
         <form onSubmit={handleCreateTopic} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mavzu nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mavzu nomi <Required /></label>
             <input
               required
               value={topicForm.name}
@@ -543,9 +544,7 @@ export default function ManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              Tavsif <span className="text-zinc-400 font-normal">(ixtiyoriy)</span>
-            </label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tavsif</label>
             <textarea
               rows={2}
               value={topicForm.description}
@@ -561,7 +560,7 @@ export default function ManagementPage() {
       <Modal isOpen={isTopicEditOpen} onClose={() => setIsTopicEditOpen(false)} title="Mavzuni tahrirlash">
         <form onSubmit={handleUpdateTopic} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mavzu nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mavzu nomi <Required /></label>
             <input
               required
               value={topicForm.name}
@@ -579,9 +578,7 @@ export default function ManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              Tavsif <span className="text-zinc-400 font-normal">(ixtiyoriy)</span>
-            </label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tavsif</label>
             <textarea
               rows={2}
               value={topicForm.description}
@@ -597,7 +594,7 @@ export default function ManagementPage() {
       <Modal isOpen={isRoomModalOpen} onClose={() => setIsRoomModalOpen(false)} title="Yangi xona qo'shish">
         <form onSubmit={handleCreateRoom} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Xona nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Xona nomi <Required /></label>
             <input
               required
               value={roomForm.name}
@@ -606,7 +603,7 @@ export default function ManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sig'im</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sig'im <Required /></label>
             <input
               type="number"
               required
@@ -623,7 +620,7 @@ export default function ManagementPage() {
       <Modal isOpen={isRoomEditOpen} onClose={() => setIsRoomEditOpen(false)} title="Xonani tahrirlash">
         <form onSubmit={handleUpdateRoom} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Xona nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Xona nomi <Required /></label>
             <input
               required
               value={roomForm.name}
@@ -632,7 +629,7 @@ export default function ManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sig'im</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sig'im <Required /></label>
             <input
               type="number"
               required
@@ -650,7 +647,7 @@ export default function ManagementPage() {
         <form onSubmit={handleCreateStaff} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism <Required /></label>
               <input
                 required
                 value={staffForm.first_name}
@@ -659,7 +656,7 @@ export default function ManagementPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya <Required /></label>
               <input
                 required
                 value={staffForm.last_name}
@@ -669,7 +666,7 @@ export default function ManagementPage() {
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Telefon</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Telefon <Required /></label>
             <input
               required
               value={staffForm.phone}
@@ -678,7 +675,7 @@ export default function ManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Lavozim</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Lavozim <Required /></label>
             <input
               required
               value={staffForm.position}
@@ -688,7 +685,7 @@ export default function ManagementPage() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Oylik maosh</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Oylik maosh <Required /></label>
               <input
                 type="number"
                 required
@@ -698,7 +695,7 @@ export default function ManagementPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ishga kirgan sana</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ishga kirgan sana <Required /></label>
               <input
                 type="date"
                 required
@@ -717,7 +714,7 @@ export default function ManagementPage() {
         <form onSubmit={handleUpdateStaff} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism <Required /></label>
               <input
                 required
                 value={staffForm.first_name}
@@ -726,7 +723,7 @@ export default function ManagementPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya <Required /></label>
               <input
                 required
                 value={staffForm.last_name}
@@ -736,7 +733,7 @@ export default function ManagementPage() {
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Lavozim</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Lavozim <Required /></label>
             <input
               required
               value={staffForm.position}
@@ -745,7 +742,7 @@ export default function ManagementPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Oylik maosh</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Oylik maosh <Required /></label>
             <input
               type="number"
               required

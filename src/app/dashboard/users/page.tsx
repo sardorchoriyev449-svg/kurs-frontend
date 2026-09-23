@@ -8,6 +8,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Badge } from '@/components/ui/EmptyState';
+import { Required } from '@/components/ui/Required';
 import { Plus, Trash2, Edit3, Search, Filter, Eye, EyeOff, Wand2, Pencil } from 'lucide-react';
 
 // Ism/familyadan login uchun mos satr hosil qilish: kichik harflarga o'tkazish,
@@ -341,7 +342,7 @@ export default function UsersPage() {
         <form onSubmit={handleCreate} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism (min 3)</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism (min 3) <Required /></label>
               <input
                 required
                 minLength={3}
@@ -351,7 +352,7 @@ export default function UsersPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya (min 3)</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya (min 3) <Required /></label>
               <input
                 required
                 minLength={3}
@@ -362,7 +363,7 @@ export default function UsersPage() {
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Telefon (9 ta raqam)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Telefon (9 ta raqam) <Required /></label>
             <input
               required
               placeholder="901234567"
@@ -372,7 +373,7 @@ export default function UsersPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tug'ilgan sana</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tug'ilgan sana <Required /></label>
             <input
               type="date"
               required
@@ -414,7 +415,7 @@ export default function UsersPage() {
             </p>
           )}
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Login (min 6)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Login (min 6) <Required /></label>
             <input
               required
               minLength={6}
@@ -425,7 +426,7 @@ export default function UsersPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Parol (min 8)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Parol (min 8) <Required /></label>
             <div className="relative">
               <input
                 type={showCreatePassword ? 'text' : 'password'}
@@ -456,7 +457,7 @@ export default function UsersPage() {
       <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} title="Foydalanuvchini tahrirlash">
         <form onSubmit={handleUpdate} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism <Required /></label>
             <input
               required
               value={editForm.first_name}
@@ -465,7 +466,7 @@ export default function UsersPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya <Required /></label>
             <input
               required
               value={editForm.last_name}
@@ -483,7 +484,7 @@ export default function UsersPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Login (min 6)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Login (min 6) <Required /></label>
             <input
               required
               minLength={6}

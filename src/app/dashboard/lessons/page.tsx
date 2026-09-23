@@ -8,6 +8,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { Badge, EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
+import { Required } from '@/components/ui/Required';
 import { BookOpen, Calendar, FileText, Trash2, Edit3 } from 'lucide-react';
 
 export default function AdminLessonsPage() {
@@ -146,7 +147,7 @@ export default function AdminLessonsPage() {
       <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} title="Darsni tahrirlash">
         <form onSubmit={handleUpdate} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars nomi <Required /></label>
             <input
               required
               value={editForm.name}
@@ -155,7 +156,7 @@ export default function AdminLessonsPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sana</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sana <Required /></label>
             <input
               type="date"
               required
@@ -168,7 +169,6 @@ export default function AdminLessonsPage() {
             <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tavsif</label>
             <textarea
               rows={3}
-              required
               value={editForm.description}
               onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
               className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"

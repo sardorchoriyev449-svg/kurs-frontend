@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react';
+import { Required } from './Required';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -11,7 +12,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className="w-full space-y-1">
         {label && (
           <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 tracking-wider">
-            {label}
+            {label} {props.required && <Required />}
           </label>
         )}
         <input

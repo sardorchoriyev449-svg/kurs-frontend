@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { Required } from '@/components/ui/Required';
 import {
   UserPlus,
   UserMinus,
@@ -664,7 +665,7 @@ export default function AdminGroupDetailPage() {
       >
         <form onSubmit={handleUpdateGroup} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Guruh nomi (kamida 5 belgi)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Guruh nomi (kamida 5 belgi) <Required /></label>
             <input
               required
               minLength={5}
@@ -675,7 +676,7 @@ export default function AdminGroupDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Kurs</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Kurs <Required /></label>
             <select
               required
               value={editForm.course_id}
@@ -698,7 +699,7 @@ export default function AdminGroupDetailPage() {
               onChange={(e) => setEditForm({ ...editForm, teacher: e.target.value })}
               className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             >
-              <option value="">O'qituvchini biriktirish (ixtiyoriy)</option>
+              <option value="">O'qituvchini biriktirish</option>
               {teachers.map((t) => (
                 <option key={t._id} value={t._id}>
                   {t.first_name} {t.last_name}
@@ -708,7 +709,7 @@ export default function AdminGroupDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars vaqti</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars vaqti <Required /></label>
             <input
               required
               value={editForm.lesson_time}
@@ -719,7 +720,7 @@ export default function AdminGroupDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Dars kunlari</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Dars kunlari <Required /></label>
             <div className="flex flex-wrap gap-2">
               {['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'].map((d) => {
                 const active = editForm.lesson_days.includes(d);
