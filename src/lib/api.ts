@@ -61,6 +61,7 @@ export const usersApi = {
   delete: (id: string) => request(`/users/${id}`, { method: 'DELETE' }),
 };
 
+
 export const groupsApi = {
   getAll: () => request<Group[]>('/groups'),
   getMine: () => request<Group[]>('/groups/mine'),
@@ -113,6 +114,8 @@ export const classRoomsApi = {
     request<ClassRoom>(`/class-rooms/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   assignGroup: (id: string, groupId: string) =>
     request<ClassRoom>(`/class-rooms/${id}/assign-group/${groupId}`, { method: 'POST' }),
+  unassignGroup: (id: string, groupId: string) =>
+    request<ClassRoom>(`/class-rooms/${id}/assign-group/${groupId}`, { method: 'DELETE' }),
   delete: (id: string) => request(`/class-rooms/${id}`, { method: 'DELETE' }),
 };
 

@@ -70,6 +70,7 @@ export default function AdminGroupDetailPage() {
   // Xona biriktirish modali
   const [isRoomAssignOpen, setIsRoomAssignOpen] = useState(false);
   const [assigningRoomId, setAssigningRoomId] = useState<string | null>(null);
+  const [removingRoomId, setRemovingRoomId] = useState<string | null>(null);
 
   // Baholar & Davomat form holatlari
   const [gradesInput, setGradesInput] = useState<{ [studentId: string]: { score: number; comment: string } }>({});
@@ -218,6 +219,20 @@ export default function AdminGroupDetailPage() {
     }
   };
 
+  // XONADAN CHIQARISH
+  const handleUnassignRoom = async (roomId: string) => {
+    setRemovingRoomId(roomId);
+    const res = await classRoomsApi.unassignGroup(roomId, id);
+    setRemovingRoomId(null);
+
+    if (res.success) {
+      toast.success("Guruh xonadan chiqarildi");
+      loadData();
+    } else {
+      toast.error(res.message || "Xonadan chiqarib bo'lmadi");
+    }
+  };
+
   const getTeacherName = (teacher: unknown): string => {
     if (!teacher) return 'Biriktirilmagan';
     if (typeof teacher === 'object' && teacher !== null) {
@@ -303,10 +318,14 @@ export default function AdminGroupDetailPage() {
     `${std.first_name} ${std.last_name} ${std.phone}`.toLowerCase().includes(studentSearch.toLowerCase())
   );
 
-  // Ushbu guruh hozir biriktirilgan xonani topish (ClassRoom.group_id massivi ichidan)
-  const currentRoom = rooms.find((r) =>
+  // Ushbu guruh hozir biriktirilgan BARCHA xonalarni topish (ClassRoom.group_id massivi ichidan).
+  // Odatda faqat 1 ta bo'lishi kerak, lekin eski (tuzatilgunga qadar) ma'lumotlarda
+  // guruh bir nechta xonada qolib ketgan bo'lishi mumkin — shuning uchun ro'yxat qilib olamiz,
+  // toki foydalanuvchi ortiqchalarini "Chiqarish" orqali tozalay olsin.
+  const assignedRooms = rooms.filter((r) =>
     r.group_id.some((g) => (typeof g === 'string' ? g : g._id) === id)
   );
+  const currentRoom = assignedRooms[0];
 
   if (loading) {
     return (
@@ -332,11 +351,20 @@ export default function AdminGroupDetailPage() {
             </span>
             <span
               className={`text-xs font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 ${
-                currentRoom ? 'bg-emerald-50 text-emerald-700' : 'bg-zinc-100 text-zinc-500'
+                assignedRooms.length === 1
+                  ? 'bg-emerald-50 text-emerald-700'
+                  : assignedRooms.length > 1
+                  ? 'bg-amber-50 text-amber-700'
+                  : 'bg-zinc-100 text-zinc-500'
               }`}
+              title={assignedRooms.length > 1 ? "Diqqat: guruh bir nechta xonada birikkan, 'Xona biriktirish' oynasidan ortiqchasini chiqarib tashlang" : undefined}
             >
               <DoorOpen className="w-3.5 h-3.5" />
-              {currentRoom ? currentRoom.name : 'Xona biriktirilmagan'}
+              {assignedRooms.length === 0
+                ? 'Xona biriktirilmagan'
+                : assignedRooms.length === 1
+                ? currentRoom.name
+                : `${assignedRooms.map((r) => r.name).join(', ')} (nomuvofiqlik!)`}
             </span>
           </div>
 
@@ -798,8 +826,9 @@ export default function AdminGroupDetailPage() {
           ) : (
             <div className="max-h-72 overflow-y-auto divide-y divide-zinc-100">
               {rooms.map((room) => {
-                const isCurrent = room._id === currentRoom?._id;
-                const isBusy = assigningRoomId === room._id;
+                const isAssignedHere = assignedRooms.some((r) => r._id === room._id);
+                const isAssigning = assigningRoomId === room._id;
+                const isRemoving = removingRoomId === room._id;
 
                 return (
                   <div key={room._id} className="py-3 flex items-center justify-between gap-3">
@@ -808,18 +837,28 @@ export default function AdminGroupDetailPage() {
                       <span className="text-xs text-zinc-400">Sig'im: {room.size} kishi &middot; Band guruhlar: {room.group_id.length}</span>
                     </div>
 
-                    {isCurrent ? (
-                      <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md font-medium">
-                        Hozirgi xona
-                      </span>
+                    {isAssignedHere ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md font-medium">
+                          Hozirgi xona
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          disabled={isRemoving}
+                          onClick={() => handleUnassignRoom(room._id)}
+                        >
+                          {isRemoving ? 'Chiqarilmoqda...' : 'Chiqarish'}
+                        </Button>
+                      </div>
                     ) : (
                       <Button
                         size="sm"
                         variant="secondary"
-                        disabled={isBusy}
+                        disabled={isAssigning}
                         onClick={() => handleAssignRoom(room._id)}
                       >
-                        {isBusy ? 'Biriktirilmoqda...' : 'Biriktirish'}
+                        {isAssigning ? 'Biriktirilmoqda...' : 'Biriktirish'}
                       </Button>
                     )}
                   </div>
