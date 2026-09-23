@@ -94,18 +94,34 @@ export const AppShell: React.FC<AppShellProps> = ({ navItems, title, children })
         {/* Profil va Chiqish */}
         <div className="p-3 border-t border-zinc-100 dark:border-zinc-800">
           <div className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200/60 dark:border-zinc-700/60">
-            <div className="flex flex-col min-w-0 pr-2">
-              <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-50 truncate">
-                {user?.first_name} {user?.last_name}
-              </span>
-              <span className="text-[11px] text-zinc-400 dark:text-zinc-500 capitalize truncate">
-                {user?.role?.replace('_', ' ')}
-              </span>
-            </div>
+            <Link
+              href="/profile"
+              onClick={() => setIsMobileOpen(false)}
+              title="Profilni tahrirlash"
+              className="flex items-center gap-2.5 min-w-0 pr-2 group cursor-pointer"
+            >
+              {user?.avatar ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.avatar} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />
+              ) : (
+                <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-xs font-bold shrink-0">
+                  {user?.first_name?.[0]}
+                  {user?.last_name?.[0]}
+                </div>
+              )}
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-50 truncate group-hover:text-indigo-600 group-hover:dark:text-indigo-400 transition-colors">
+                  {user?.first_name} {user?.last_name}
+                </span>
+                <span className="text-[11px] text-zinc-400 dark:text-zinc-500 capitalize truncate">
+                  {user?.role?.replace('_', ' ')}
+                </span>
+              </div>
+            </Link>
             <button
               onClick={() => logout()}
               title="Tizimdan chiqish"
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/15 dark:hover:text-rose-400 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/15 dark:hover:text-rose-400 transition-colors cursor-pointer shrink-0"
             >
               <LogOut className="w-4 h-4" />
             </button>

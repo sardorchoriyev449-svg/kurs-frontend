@@ -247,7 +247,7 @@ export default function TeacherGroupFullManagementPage() {
     setIsUploading(true);
     const res = await uploadApi.uploadFile(file);
     if (res.success && res.data) {
-      onSuccess(res.data.path);
+      onSuccess(res.data.url);
       toast.success("Fayl yuklandi");
     } else {
       toast.error(res.message || "Fayl yuklanmadi");

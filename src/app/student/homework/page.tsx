@@ -91,7 +91,7 @@ export default function StudentHomeworkPage() {
     setUploading(true);
     const res = await uploadApi.uploadFile(file);
     if (res.success && res.data) {
-      setSubmitForm((prev) => ({ ...prev, file_name: res.data!.path }));
+      setSubmitForm((prev) => ({ ...prev, file_name: res.data!.url }));
       toast.success("Fayl muvaffaqiyatli yuklandi");
     } else {
       toast.error(res.message || "Fayl yuklashda xatolik");

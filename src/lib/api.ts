@@ -54,8 +54,10 @@ export const usersApi = {
   getOne: (id: string) => request<User>(`/users/${id}`),
   create: (data: { first_name: string; last_name: string; phone: string; data_both: string; password: string; login: string }) =>
     request<User>('/users', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id: string, data: { first_name?: string; last_name?: string; data_both?: string }) =>
+  update: (id: string, data: { first_name?: string; last_name?: string; data_both?: string; login?: string; password?: string; avatar?: string }) =>
     request<User>(`/users/update/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  updateMe: (data: { first_name?: string; last_name?: string; avatar?: string }) =>
+    request<User>('/users/me', { method: 'PUT', body: JSON.stringify(data) }),
   updateRole: (id: string, role: string) =>
     request<User>(`/users/${id}/role`, { method: 'PUT', body: JSON.stringify({ role }) }),
   delete: (id: string) => request(`/users/${id}`, { method: 'DELETE' }),
@@ -190,9 +192,9 @@ export const staffApi = {
 };
 
 export const uploadApi = {
-  uploadFile: async (file: File): Promise<ApiResponse<{ path: string; filename: string }>> => {
+  uploadFile: async (file: File): Promise<ApiResponse<{ url: string }>> => {
     const formData = new FormData();
     formData.append('file', file);
-    return request('/uploads/file', { method: 'POST', body: formData });
+    return request('/upload', { method: 'POST', body: formData });
   }
 };

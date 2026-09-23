@@ -33,10 +33,13 @@ export default function UsersPage() {
   // Tahrirlash modali
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showEditPassword, setShowEditPassword] = useState(false);
   const [editForm, setEditForm] = useState({
     first_name: '',
     last_name: '',
     data_both: '',
+    login: '',
+    password: '',
   });
 
   const loadUsers = async () => {
@@ -83,14 +86,19 @@ export default function UsersPage() {
       first_name: u.first_name,
       last_name: u.last_name,
       data_both: u.data_both || '',
+      login: u.login,
+      password: '',
     });
+    setShowEditPassword(false);
     setIsEditOpen(true);
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUser) return;
-    const res = await usersApi.update(selectedUser._id, editForm);
+    const { password, ...rest } = editForm;
+    const payload = password ? { ...rest, password } : rest;
+    const res = await usersApi.update(selectedUser._id, payload);
     if (res.success) {
       toast.success("Foydalanuvchi ma'lumotlari yangilandi");
       setIsEditOpen(false);
@@ -415,6 +423,41 @@ export default function UsersPage() {
               onChange={(e) => setEditForm({ ...editForm, data_both: e.target.value })}
               className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Login (min 6)</label>
+            <input
+              required
+              minLength={6}
+              value={editForm.login}
+              onChange={(e) => setEditForm({ ...editForm, login: e.target.value })}
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              Yangi parol <span className="text-zinc-400 font-normal">(bo'sh qoldirsangiz o'zgarmaydi, min 8)</span>
+            </label>
+            <div className="relative">
+              <input
+                type={showEditPassword ? 'text' : 'password'}
+                minLength={8}
+                value={editForm.password}
+                onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
+                placeholder="••••••••"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowEditPassword((prev) => !prev)}
+                tabIndex={-1}
+                title={showEditPassword ? 'Parolni yashirish' : "Parolni ko'rsatish"}
+                aria-label={showEditPassword ? 'Parolni yashirish' : "Parolni ko'rsatish"}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 hover:dark:text-zinc-400 transition-colors cursor-pointer"
+              >
+                {showEditPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
           <Button type="submit" className="w-full mt-2">Saqlash</Button>
         </form>
