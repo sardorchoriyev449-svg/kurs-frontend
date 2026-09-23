@@ -854,10 +854,20 @@ export default function TeacherGroupFullManagementPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">O'quv rejadagi mavzu (ixtiyoriy)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              O'quv rejadagi mavzu <span className="text-zinc-400 font-normal">(ixtiyoriy, tanlansa sarlavha shu nom bilan to'ldiriladi)</span>
+            </label>
             <select
               value={assignmentForm.topic_id}
-              onChange={(e) => setAssignmentForm({ ...assignmentForm, topic_id: e.target.value })}
+              onChange={(e) => {
+                const topicId = e.target.value;
+                const topic = topics.find((t) => t._id === topicId);
+                setAssignmentForm({
+                  ...assignmentForm,
+                  topic_id: topicId,
+                  title: topic ? topic.name : assignmentForm.title,
+                });
+              }}
               className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             >
               <option value="">Tanlang</option>

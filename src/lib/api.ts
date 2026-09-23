@@ -104,7 +104,7 @@ export const coursesApi = {
 export const topicsApi = {
   getAll: () => request<Topic[]>('/topics'),
   getByCourse: (courseId: string) => request<Topic[]>(`/topics/course/${courseId}`),
-  create: (data: { course_id: string; name: string; order?: number }) =>
+  create: (data: { course_id: string; name: string; order?: number; description?: string }) =>
     request<Topic>('/topics', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: Partial<Topic>) =>
     request<Topic>(`/topics/${id}`, { method: 'PUT', body: JSON.stringify(data) }),

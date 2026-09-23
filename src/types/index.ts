@@ -24,6 +24,7 @@ export interface Topic {
   course_id: string | { _id: string; name: string };
   name: string;
   order: number;
+  description?: string;
 }
 
 export interface Group {

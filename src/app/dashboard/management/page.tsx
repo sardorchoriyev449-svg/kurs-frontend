@@ -26,7 +26,7 @@ export default function ManagementPage() {
   const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
   const [isTopicEditOpen, setIsTopicEditOpen] = useState(false);
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
-  const [topicForm, setTopicForm] = useState<{ name: string; order: number | '' }>({ name: '', order: '' });
+  const [topicForm, setTopicForm] = useState<{ name: string; order: number | ''; description: string }>({ name: '', order: '', description: '' });
 
   // Xonalar
   const [rooms, setRooms] = useState<ClassRoom[]>([]);
@@ -119,12 +119,13 @@ export default function ManagementPage() {
     const res = await topicsApi.create({
       course_id: selectedCourseForTopic,
       name: topicForm.name,
+      description: topicForm.description || undefined,
       ...(topicForm.order !== '' ? { order: Number(topicForm.order) } : {}),
     });
     if (res.success) {
       toast.success("Mavzu qo'shildi");
       setIsTopicModalOpen(false);
-      setTopicForm({ name: '', order: '' });
+      setTopicForm({ name: '', order: '', description: '' });
       loadTopics(selectedCourseForTopic);
     }
   };
@@ -134,6 +135,7 @@ export default function ManagementPage() {
     if (!activeTopic) return;
     const res = await topicsApi.update(activeTopic._id, {
       name: topicForm.name,
+      description: topicForm.description || undefined,
       ...(topicForm.order !== '' ? { order: Number(topicForm.order) } : {}),
     });
     if (res.success) {
@@ -303,7 +305,7 @@ export default function ManagementPage() {
             </div>
             <Button
               onClick={() => {
-                setTopicForm({ name: '', order: topics.length + 1 });
+                setTopicForm({ name: '', order: topics.length + 1, description: '' });
                 setIsTopicModalOpen(true);
               }}
             >
@@ -330,7 +332,7 @@ export default function ManagementPage() {
                         <button
                           onClick={() => {
                             setActiveTopic(t);
-                            setTopicForm({ name: t.name, order: t.order });
+                            setTopicForm({ name: t.name, order: t.order, description: t.description || '' });
                             setIsTopicEditOpen(true);
                           }}
                           className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 hover:dark:text-indigo-400 rounded-lg hover:bg-indigo-50 hover:dark:bg-indigo-500/15"
@@ -540,6 +542,17 @@ export default function ManagementPage() {
               className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              Tavsif <span className="text-zinc-400 font-normal">(ixtiyoriy)</span>
+            </label>
+            <textarea
+              rows={2}
+              value={topicForm.description}
+              onChange={(e) => setTopicForm({ ...topicForm, description: e.target.value })}
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
+            />
+          </div>
           <Button type="submit" className="w-full">Qo'shish</Button>
         </form>
       </Modal>
@@ -562,6 +575,17 @@ export default function ManagementPage() {
               type="number"
               value={topicForm.order}
               onChange={(e) => setTopicForm({ ...topicForm, order: e.target.value === '' ? '' : Number(e.target.value) })}
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              Tavsif <span className="text-zinc-400 font-normal">(ixtiyoriy)</span>
+            </label>
+            <textarea
+              rows={2}
+              value={topicForm.description}
+              onChange={(e) => setTopicForm({ ...topicForm, description: e.target.value })}
               className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
