@@ -81,21 +81,21 @@ export default function StudentLessonsPage() {
       {/* Sarlavha va guruh filtratori */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">O'tilgan darslar</h1>
-          <p className="text-sm text-zinc-500 mt-1">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">O'tilgan darslar</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
             Dars mavzulari, video yozuvlar va biriktirilgan ta'lim materiallari
           </p>
         </div>
 
         {groups.length > 1 && (
           <div className="w-full sm:w-72">
-            <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
               Guruhni tanlang:
             </label>
             <select
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
-              className="w-full text-sm font-medium bg-white border border-zinc-200 rounded-xl px-3.5 py-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-sm font-medium bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3.5 py-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               {groups.map((g) => (
                 <option key={g._id} value={g._id}>
@@ -134,42 +134,42 @@ export default function StudentLessonsPage() {
             return (
               <div
                 key={lesson._id}
-                className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs hover:border-zinc-300 transition-all"
+                className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-6 shadow-xs hover:border-zinc-300 hover:dark:border-zinc-700 transition-all"
               >
                 {/* Dars tepa qismi: sana va mavzu */}
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className="text-xs font-mono text-zinc-400 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-zinc-400" />
+                  <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500 flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
                     {lesson.date}
                   </span>
                   {topicName && (
-                    <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
+                    <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
                       {topicName}
                     </span>
                   )}
                 </div>
 
                 {/* Dars nomi */}
-                <h3 className="text-lg font-bold text-zinc-900">{lesson.name}</h3>
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{lesson.name}</h3>
 
                 {/* Dars tavsifi */}
                 {lesson.description && (
-                  <p className="text-sm text-zinc-600 mt-2 whitespace-pre-line leading-relaxed">
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2 whitespace-pre-line leading-relaxed">
                     {lesson.description}
                   </p>
                 )}
 
                 {/* Video va fayl materiallari tugmalari */}
                 {(lesson.video_uri || lesson.file_uri) && (
-                  <div className="mt-5 pt-4 border-t border-zinc-100 flex flex-wrap items-center gap-3">
+                  <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex flex-wrap items-center gap-3">
                     {lesson.video_uri && (
                       <a
                         href={getFileUrl(lesson.video_uri)}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-semibold hover:bg-indigo-100 transition-colors"
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 text-xs font-semibold hover:bg-indigo-100 hover:dark:bg-indigo-500/20 transition-colors"
                       >
-                        <Video className="w-4 h-4 text-indigo-600" />
+                        <Video className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                         Video darsni tomosha qilish
                         <ExternalLink className="w-3 h-3 text-indigo-400 ml-0.5" />
                       </a>
@@ -180,9 +180,9 @@ export default function StudentLessonsPage() {
                         href={getFileUrl(lesson.file_uri)}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-700 text-xs font-semibold hover:bg-zinc-100 transition-colors"
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-semibold hover:bg-zinc-100 hover:dark:bg-zinc-800 transition-colors"
                       >
-                        <Download className="w-4 h-4 text-zinc-500" />
+                        <Download className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
                         Dars materialini yuklab olish
                       </a>
                     )}

@@ -8,7 +8,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Badge } from '@/components/ui/EmptyState';
-import { Plus, Trash2, Edit3, Search, Filter } from 'lucide-react';
+import { Plus, Trash2, Edit3, Search, Filter, Eye, EyeOff } from 'lucide-react';
 
 export default function UsersPage() {
   const { user: currentUser } = useAuth();
@@ -20,6 +20,7 @@ export default function UsersPage() {
 
   // Yaratish modali
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [showCreatePassword, setShowCreatePassword] = useState(false);
   const [form, setForm] = useState({
     first_name: '',
     last_name: '',
@@ -157,8 +158,8 @@ export default function UsersPage() {
       {/* Yuqori sarlavha */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">Foydalanuvchilar</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">Tizimdagi barcha talaba, o'qituvchi va xodimlar</p>
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Foydalanuvchilar</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Tizimdagi barcha talaba, o'qituvchi va xodimlar</p>
         </div>
         <Button onClick={() => setIsCreateOpen(true)}>
           <Plus className="w-4 h-4 mr-1.5" /> Foydalanuvchi qo'shish
@@ -166,7 +167,7 @@ export default function UsersPage() {
       </div>
 
       {/* Rol filtri tugmalari (Tabs) */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-zinc-200 pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-3">
         {[
           { key: 'all', label: 'Barchasi', count: counts.all },
           { key: 'student', label: "O'quvchilar", count: counts.student },
@@ -182,13 +183,13 @@ export default function UsersPage() {
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 active
                   ? 'bg-indigo-600 text-white shadow-xs'
-                  : 'bg-white border border-zinc-200 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900'
+                  : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 hover:dark:bg-zinc-950 hover:text-zinc-900 hover:dark:text-zinc-50'
               }`}
             >
               <span>{tab.label}</span>
               <span
                 className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono ${
-                  active ? 'bg-indigo-700/80 text-white' : 'bg-zinc-100 text-zinc-500'
+                  active ? 'bg-indigo-700/80 text-white' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400'
                 }`}
               >
                 {tab.count}
@@ -199,8 +200,8 @@ export default function UsersPage() {
       </div>
 
       {/* Qidiruv qatori */}
-      <div className="flex items-center gap-3 bg-white p-2.5 rounded-2xl border border-zinc-200/80 shadow-xs max-w-sm">
-        <Search className="w-4 h-4 text-zinc-400 ml-1.5" />
+      <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-2.5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs max-w-sm">
+        <Search className="w-4 h-4 text-zinc-400 dark:text-zinc-500 ml-1.5" />
         <input
           placeholder="Ism, login yoki telefon orqali qidirish..."
           value={search}
@@ -210,9 +211,9 @@ export default function UsersPage() {
       </div>
 
       {/* Foydalanuvchilar jadvali */}
-      <div className="bg-white border border-zinc-200/80 rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl shadow-xs overflow-hidden">
         <table className="w-full text-left text-sm">
-          <thead className="bg-zinc-50 border-b border-zinc-200/80 text-zinc-500 text-xs font-semibold uppercase tracking-wider">
+          <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200/80 dark:border-zinc-800/80 text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider">
             <tr>
               <th className="px-6 py-3.5">F.I.SH</th>
               <th className="px-6 py-3.5">Login / Tel</th>
@@ -221,14 +222,14 @@ export default function UsersPage() {
               <th className="px-6 py-3.5 text-right">Amallar</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-100">
+          <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-zinc-400">Yuklanmoqda...</td>
+                <td colSpan={5} className="px-6 py-8 text-center text-zinc-400 dark:text-zinc-500">Yuklanmoqda...</td>
               </tr>
             ) : filteredUsers.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-zinc-400">
+                <td colSpan={5} className="px-6 py-8 text-center text-zinc-400 dark:text-zinc-500">
                   Mos foydalanuvchilar topilmadi
                 </td>
               </tr>
@@ -238,14 +239,14 @@ export default function UsersPage() {
                 const isSuperAdmin = u.role === 'super_admin';
 
                 return (
-                  <tr key={u._id} className={isSuperAdmin ? 'bg-zinc-50/50' : 'hover:bg-zinc-50/50'}>
-                    <td className="px-6 py-4 font-medium text-zinc-900">
+                  <tr key={u._id} className={isSuperAdmin ? 'bg-zinc-50/50 dark:bg-zinc-800/50' : 'hover:bg-zinc-50/50 hover:dark:bg-zinc-800/50'}>
+                    <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">
                       {u.first_name} {u.last_name}
-                      {isMe && <span className="ml-2 text-xs text-indigo-600 font-normal">(Siz)</span>}
+                      {isMe && <span className="ml-2 text-xs text-indigo-600 dark:text-indigo-400 font-normal">(Siz)</span>}
                     </td>
-                    <td className="px-6 py-4 text-zinc-500">
-                      <div className="font-mono text-xs text-zinc-700">{u.login}</div>
-                      <div className="text-xs text-zinc-400 font-mono mt-0.5">{formatPhone(u.phone)}</div>
+                    <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400">
+                      <div className="font-mono text-xs text-zinc-700 dark:text-zinc-300">{u.login}</div>
+                      <div className="text-xs text-zinc-400 dark:text-zinc-500 font-mono mt-0.5">{formatPhone(u.phone)}</div>
                     </td>
                     <td className="px-6 py-4">
                       <Badge
@@ -267,7 +268,7 @@ export default function UsersPage() {
                         disabled={isMe || isSuperAdmin}
                         value={u.role}
                         onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                        className="text-xs bg-white border border-zinc-200 rounded-lg px-2.5 py-1.5 text-zinc-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 cursor-pointer"
+                        className="text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2.5 py-1.5 text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-40 cursor-pointer"
                       >
                         <option value="viwer">viwer</option>
                         <option value="student">student</option>
@@ -280,7 +281,7 @@ export default function UsersPage() {
                         <button
                           disabled={isSuperAdmin}
                           onClick={() => openEditModal(u)}
-                          className="p-1.5 text-zinc-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors disabled:opacity-30"
+                          className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 hover:dark:text-indigo-400 rounded-lg hover:bg-indigo-50 hover:dark:bg-indigo-500/15 transition-colors disabled:opacity-30"
                           title="Tahrirlash"
                         >
                           <Edit3 className="w-4 h-4" />
@@ -288,7 +289,7 @@ export default function UsersPage() {
                         <button
                           disabled={isMe || isSuperAdmin}
                           onClick={() => handleDelete(u._id)}
-                          className="p-1.5 text-zinc-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors disabled:opacity-30"
+                          className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-rose-600 hover:dark:text-rose-400 rounded-lg hover:bg-rose-50 hover:dark:bg-rose-500/15 transition-colors disabled:opacity-30"
                           title="O'chirish"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -308,66 +309,78 @@ export default function UsersPage() {
         <form onSubmit={handleCreate} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Ism (min 3)</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism (min 3)</label>
               <input
                 required
                 minLength={3}
                 value={form.first_name}
                 onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Familiya (min 3)</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya (min 3)</label>
               <input
                 required
                 minLength={3}
                 value={form.last_name}
                 onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Telefon (9 ta raqam)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Telefon (9 ta raqam)</label>
             <input
               required
               placeholder="901234567"
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Tug'ilgan sana</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tug'ilgan sana</label>
             <input
               type="date"
               required
               value={form.data_both}
               onChange={(e) => setForm({ ...form, data_both: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Login (min 6)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Login (min 6)</label>
             <input
               required
               minLength={6}
               value={form.login}
               onChange={(e) => setForm({ ...form, login: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Parol (min 8)</label>
-            <input
-              type="password"
-              required
-              minLength={8}
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
-            />
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Parol (min 8)</label>
+            <div className="relative">
+              <input
+                type={showCreatePassword ? 'text' : 'password'}
+                required
+                minLength={8}
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowCreatePassword((prev) => !prev)}
+                tabIndex={-1}
+                title={showCreatePassword ? 'Parolni yashirish' : "Parolni ko'rsatish"}
+                aria-label={showCreatePassword ? 'Parolni yashirish' : "Parolni ko'rsatish"}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 hover:dark:text-zinc-400 transition-colors cursor-pointer"
+              >
+                {showCreatePassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
           <Button type="submit" className="w-full mt-2">Yaratish</Button>
         </form>
@@ -377,30 +390,30 @@ export default function UsersPage() {
       <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} title="Foydalanuvchini tahrirlash">
         <form onSubmit={handleUpdate} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Ism</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism</label>
             <input
               required
               value={editForm.first_name}
               onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Familiya</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya</label>
             <input
               required
               value={editForm.last_name}
               onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Tug'ilgan sana</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tug'ilgan sana</label>
             <input
               type="date"
               value={editForm.data_both}
               onChange={(e) => setEditForm({ ...editForm, data_both: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <Button type="submit" className="w-full mt-2">Saqlash</Button>

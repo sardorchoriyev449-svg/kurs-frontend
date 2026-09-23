@@ -122,8 +122,8 @@ export default function StudentHomeworkPage() {
     <div className="space-y-6">
       {/* Sarlavha */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900">Uy vazifalari</h1>
-        <p className="text-sm text-zinc-500 mt-1">Berilgan topshiriqlar, namuna fayllar va baholanish holati</p>
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Uy vazifalari</h1>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Berilgan topshiriqlar, namuna fayllar va baholanish holati</p>
       </div>
 
       {loading ? (
@@ -148,24 +148,24 @@ export default function StudentHomeworkPage() {
             return (
               <div
                 key={assignment._id}
-                className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs hover:border-zinc-300 transition-all"
+                className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-6 shadow-xs hover:border-zinc-300 hover:dark:border-zinc-700 transition-all"
               >
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                   <div className="space-y-2 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
+                      <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
                         {getGroupName(assignment.group_id)}
                       </span>
                       {assignment.due_date && (
-                        <span className="text-xs text-zinc-400 font-mono flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                        <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
                           Muddat: {assignment.due_date}
                         </span>
                       )}
                     </div>
 
-                    <h3 className="text-lg font-bold text-zinc-900">{assignment.title}</h3>
-                    <p className="text-sm text-zinc-600 whitespace-pre-line leading-relaxed">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{assignment.title}</h3>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 whitespace-pre-line leading-relaxed">
                       {assignment.description}
                     </p>
 
@@ -176,11 +176,11 @@ export default function StudentHomeworkPage() {
                           href={getFileUrl(assignment.attachment)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs font-medium text-zinc-700 hover:bg-zinc-100 transition-colors"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 hover:dark:bg-zinc-800 transition-colors"
                         >
-                          <Paperclip className="w-3.5 h-3.5 text-zinc-500" />
+                          <Paperclip className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
                           Vazifa namunasi / faylini yuklab olish
-                          <Download className="w-3.5 h-3.5 ml-1 text-zinc-400" />
+                          <Download className="w-3.5 h-3.5 ml-1 text-zinc-400 dark:text-zinc-500" />
                         </a>
                       </div>
                     )}
@@ -221,17 +221,17 @@ export default function StudentHomeworkPage() {
 
                 {/* Talaba topshirgan javob tafsilotlari */}
                 {submission && (
-                  <div className="mt-5 pt-4 border-t border-zinc-100 bg-zinc-50/70 p-4 rounded-xl space-y-2">
+                  <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-800/70 p-4 rounded-xl space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-zinc-700 uppercase tracking-wider flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Siz topshirgan javob:
+                      <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Siz topshirgan javob:
                       </span>
                       {submission.file_name && (
                         <a
                           href={getFileUrl(submission.file_name)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 hover:dark:text-indigo-300 hover:underline"
                         >
                           <ExternalLink className="w-3.5 h-3.5" /> Yuborilgan faylni ko'rish
                         </a>
@@ -239,11 +239,11 @@ export default function StudentHomeworkPage() {
                     </div>
 
                     {submission.description && (
-                      <p className="text-xs text-zinc-600 pl-5.5">{submission.description}</p>
+                      <p className="text-xs text-zinc-600 dark:text-zinc-400 pl-5.5">{submission.description}</p>
                     )}
 
                     {submission.teacher_comment && (
-                      <div className="mt-3 p-3 rounded-lg bg-indigo-50/60 border border-indigo-100 text-xs text-indigo-900">
+                      <div className="mt-3 p-3 rounded-lg bg-indigo-50 dark:bg-indigo-500/15/60 border border-indigo-100 dark:border-indigo-500/20 text-xs text-indigo-900 dark:text-indigo-200">
                         <span className="font-semibold block mb-0.5">O'qituvchi fikri:</span>
                         {submission.teacher_comment}
                       </div>
@@ -265,7 +265,7 @@ export default function StudentHomeworkPage() {
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
               Izoh yoki GitHub / loyiha havolasi
             </label>
             <textarea
@@ -274,27 +274,27 @@ export default function StudentHomeworkPage() {
               value={submitForm.description}
               onChange={(e) => setSubmitForm({ ...submitForm, description: e.target.value })}
               placeholder="Vazifa qanday bajarilgani haqida qisqacha izoh..."
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
               Bajarilgan ish fayli (zip, rar, 7z, pdf, rasm)
             </label>
             <input
               type="file"
               required
               onChange={handleFileUpload}
-              className="w-full text-xs text-zinc-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-medium file:bg-zinc-100 hover:file:bg-zinc-200 cursor-pointer"
+              className="w-full text-xs text-zinc-500 dark:text-zinc-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:dark:bg-zinc-800 hover:file:bg-zinc-200 hover:file:dark:bg-zinc-700 cursor-pointer"
             />
             {uploading && (
-              <span className="text-xs text-zinc-500 block mt-1.5 animate-pulse">
+              <span className="text-xs text-zinc-500 dark:text-zinc-400 block mt-1.5 animate-pulse">
                 Fayl serverga yuklanmoqda...
               </span>
             )}
             {submitForm.file_name && !uploading && (
-              <span className="text-xs text-emerald-600 font-medium block mt-1.5 flex items-center gap-1">
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium block mt-1.5 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Fayl tayyor
               </span>
             )}

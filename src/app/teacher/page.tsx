@@ -58,11 +58,11 @@ export default function TeacherDashboardPage() {
       {/* Sarlavha qismi */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">Mening guruhlarim</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">Siz dars o'tadigan faol o'quv guruhlari ro'yxati</p>
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Mening guruhlarim</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Siz dars o'tadigan faol o'quv guruhlari ro'yxati</p>
         </div>
         {!loading && groups.length > 0 && (
-          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-zinc-100 text-zinc-700 self-start sm:self-auto">
+          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 self-start sm:self-auto">
             Jami: {groups.length} ta guruh
           </span>
         )}
@@ -87,31 +87,31 @@ export default function TeacherDashboardPage() {
           {groups.map((group) => (
             <div
               key={group._id}
-              className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs flex flex-col justify-between hover:border-indigo-300 transition-all group"
+              className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-6 shadow-xs flex flex-col justify-between hover:border-indigo-300 hover:dark:border-indigo-500/40 transition-all group"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
                     {getCourseName(group.course_id)}
                   </span>
-                  <span className="text-xs font-mono text-zinc-400 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                  <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500 flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
                     {group.lesson_time || '00:00'}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-zinc-900 group-hover:text-indigo-600 transition-colors">
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 group-hover:text-indigo-600 group-hover:dark:text-indigo-400 transition-colors">
                   {group.name}
                 </h3>
 
-                <div className="mt-3 flex items-center gap-1.5 text-xs text-zinc-500">
-                  <Users className="w-4 h-4 text-zinc-400" />
+                <div className="mt-3 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                  <Users className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
                   <span>O'quvchilar soni: {group.students?.length || 0} ta</span>
                 </div>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-zinc-100 flex items-center justify-between">
-                <span className="text-xs text-zinc-400 truncate max-w-[150px]">
+              <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                <span className="text-xs text-zinc-400 dark:text-zinc-500 truncate max-w-[150px]">
                   {Array.isArray(group.lesson_days) && group.lesson_days.length > 0
                     ? group.lesson_days.join(', ')
                     : 'Kunlar belgilanmagan'}
@@ -119,7 +119,7 @@ export default function TeacherDashboardPage() {
 
                 <Link
                   href={`/teacher/groups/${group._id}`}
-                  className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
+                  className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 hover:dark:text-indigo-300 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
                 >
                   Dars & Vazifalar <ArrowRight className="w-3.5 h-3.5" />
                 </Link>

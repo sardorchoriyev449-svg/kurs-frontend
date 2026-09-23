@@ -130,8 +130,8 @@ export default function GroupsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-zinc-900">Guruhlar</h1>
-          <p className="text-sm text-zinc-500">Mavjud barcha o'quv guruhlari</p>
+          <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">Guruhlar</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Mavjud barcha o'quv guruhlari</p>
         </div>
         <Button onClick={() => setIsOpen(true)}>
           <Plus className="w-4 h-4 mr-1.5" /> Guruh qo'shish
@@ -142,34 +142,34 @@ export default function GroupsPage() {
         {groups.map((grp) => (
           <div
             key={grp._id}
-            className="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between hover:border-zinc-300 transition-all"
+            className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between hover:border-zinc-300 hover:dark:border-zinc-700 transition-all"
           >
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
                   {getCourseName(grp.course_id)}
                 </span>
-                <span className="text-xs text-zinc-400 flex items-center gap-1 font-mono">
+                <span className="text-xs text-zinc-400 dark:text-zinc-500 flex items-center gap-1 font-mono">
                   <Clock className="w-3.5 h-3.5" /> {grp.lesson_time}
                 </span>
               </div>
-              <h3 className="text-base font-bold text-zinc-900">{grp.name}</h3>
-              <p className="text-xs text-zinc-500 mt-1">
-                O'qituvchi: <span className="font-medium text-zinc-700">{getTeacherName(grp.teacher)}</span>
+              <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">{grp.name}</h3>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                O'qituvchi: <span className="font-medium text-zinc-700 dark:text-zinc-300">{getTeacherName(grp.teacher)}</span>
               </p>
-              <div className="mt-3 flex items-center gap-1.5 text-xs text-zinc-500">
-                <Users className="w-4 h-4 text-zinc-400" />
+              <div className="mt-3 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                <Users className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
                 <span>O'quvchilar: {grp.students?.length || 0} ta</span>
               </div>
             </div>
 
-            <div className="mt-5 pt-4 border-t border-zinc-100 flex items-center justify-between">
-              <span className="text-xs text-zinc-400">
+            <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+              <span className="text-xs text-zinc-400 dark:text-zinc-500">
                 {Array.isArray(grp.lesson_days) ? grp.lesson_days.join(', ') : ''}
               </span>
               <Link
                 href={`/dashboard/groups/${grp._id}`}
-                className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 hover:dark:text-indigo-300 flex items-center gap-1"
               >
                 Boshqarish <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -181,24 +181,24 @@ export default function GroupsPage() {
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Yangi guruh yaratish">
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Guruh nomi (min 5)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Guruh nomi (min 5)</label>
             <input
               required
               minLength={5}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="Masalan: Frontend 24"
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Kurs</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Kurs</label>
             <select
               required
               value={form.course_id}
               onChange={(e) => setForm({ ...form, course_id: e.target.value })}
-              className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             >
               <option value="">Kursni tanlang</option>
               {courses.map((c) => (
@@ -208,11 +208,11 @@ export default function GroupsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">O'qituvchi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">O'qituvchi</label>
             <select
               value={form.teacher}
               onChange={(e) => setForm({ ...form, teacher: e.target.value })}
-              className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             >
               <option value="">O'qituvchini biriktirish (ixtiyoriy)</option>
               {teachers.map((t) => (
@@ -222,19 +222,19 @@ export default function GroupsPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Dars vaqti</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars vaqti</label>
             <input
               required
               value={form.lesson_time}
               type='time'
               onChange={(e) => setForm({ ...form, lesson_time: e.target.value })}
               placeholder="14:00 - 16:00"
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1.5">Dars kunlari</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Dars kunlari</label>
             <div className="flex flex-wrap gap-2">
               {['Du', 'Se', 'Chor', 'Pay', 'Ju', 'Sha', 'Yak'].map((d) => {
                 const active = form.lesson_days.includes(d);
@@ -244,7 +244,7 @@ export default function GroupsPage() {
                     type="button"
                     onClick={() => handleDayToggle(d)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                      active ? 'bg-indigo-600 text-white' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
+                      active ? 'bg-indigo-600 text-white' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 hover:dark:bg-zinc-700'
                     }`}
                   >
                     {d}

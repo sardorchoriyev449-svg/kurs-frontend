@@ -206,11 +206,11 @@ export default function ManagementPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900">Tizim boshqaruvi</h1>
-        <p className="text-sm text-zinc-500 mt-0.5">Kurslar, o'quv rejalari, auditoriyalar va markaz xodimlari</p>
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Tizim boshqaruvi</h1>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Kurslar, o'quv rejalari, auditoriyalar va markaz xodimlari</p>
       </div>
 
-      <div className="flex items-center gap-2 border-b border-zinc-200">
+      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800">
         {[
           { key: 'courses', label: 'Kurslar', icon: Layers },
           { key: 'topics', label: 'O\'quv reja (Mavzular)', icon: BookCheck },
@@ -224,7 +224,7 @@ export default function ManagementPage() {
               key={tab.key}
               onClick={() => setActiveTab(tab.key as any)}
               className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
-                active ? 'border-indigo-600 text-indigo-600 font-semibold' : 'border-transparent text-zinc-500 hover:text-zinc-700'
+                active ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold' : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 hover:dark:text-zinc-300'
               }`}
             >
               <Icon className="w-4 h-4" /> {tab.label}
@@ -248,10 +248,10 @@ export default function ManagementPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {courses.map((course) => (
-              <div key={course._id} className="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
+              <div key={course._id} className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-zinc-400 font-mono">ID: {course._id.slice(-6)}</span>
+                    <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">ID: {course._id.slice(-6)}</span>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => {
@@ -259,23 +259,23 @@ export default function ManagementPage() {
                           setCourseForm({ name: course.name, price: course.price, description: course.description });
                           setIsCourseEditOpen(true);
                         }}
-                        className="p-1 text-zinc-400 hover:text-indigo-600 rounded-md hover:bg-zinc-100"
+                        className="p-1 text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 hover:dark:text-indigo-400 rounded-md hover:bg-zinc-100 hover:dark:bg-zinc-800"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeleteCourse(course._id)}
-                        className="p-1 text-zinc-400 hover:text-rose-600 rounded-md hover:bg-zinc-100"
+                        className="p-1 text-zinc-400 dark:text-zinc-500 hover:text-rose-600 hover:dark:text-rose-400 rounded-md hover:bg-zinc-100 hover:dark:bg-zinc-800"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
-                  <h3 className="text-base font-bold text-zinc-900">{course.name}</h3>
-                  <p className="text-xs text-zinc-500 mt-1">{course.description}</p>
+                  <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">{course.name}</h3>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{course.description}</p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
-                  <span className="text-sm font-extrabold text-indigo-600">{formatPrice(course.price)}</span>
+                <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                  <span className="text-sm font-extrabold text-indigo-600 dark:text-indigo-400">{formatPrice(course.price)}</span>
                 </div>
               </div>
             ))}
@@ -291,7 +291,7 @@ export default function ManagementPage() {
               <select
                 value={selectedCourseForTopic}
                 onChange={(e) => setSelectedCourseForTopic(e.target.value)}
-                className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               >
                 {courses.map((c) => (
                   <option key={c._id} value={c._id}>{c.name}</option>
@@ -308,20 +308,20 @@ export default function ManagementPage() {
             </Button>
           </div>
 
-          <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
             <table className="w-full text-left text-sm">
-              <thead className="bg-zinc-50 border-b border-zinc-200/80 text-zinc-500 text-xs font-semibold uppercase">
+              <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200/80 dark:border-zinc-800/80 text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase">
                 <tr>
                   <th className="px-6 py-3.5">Tartib</th>
                   <th className="px-6 py-3.5">Mavzu nomi</th>
                   <th className="px-6 py-3.5 text-right">Amallar</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100">
+              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                 {topics.map((t) => (
                   <tr key={t._id}>
                     <td className="px-6 py-4 font-mono text-xs">{t.order}</td>
-                    <td className="px-6 py-4 font-medium text-zinc-900">{t.name}</td>
+                    <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">{t.name}</td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
@@ -330,7 +330,7 @@ export default function ManagementPage() {
                             setTopicForm({ name: t.name, order: t.order });
                             setIsTopicEditOpen(true);
                           }}
-                          className="p-1.5 text-zinc-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50"
+                          className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 hover:dark:text-indigo-400 rounded-lg hover:bg-indigo-50 hover:dark:bg-indigo-500/15"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                         </button>
@@ -341,7 +341,7 @@ export default function ManagementPage() {
                               loadTopics(selectedCourseForTopic);
                             }
                           }}
-                          className="p-1.5 text-zinc-400 hover:text-rose-600 rounded-lg hover:bg-rose-50"
+                          className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-rose-600 hover:dark:text-rose-400 rounded-lg hover:bg-rose-50 hover:dark:bg-rose-500/15"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -370,10 +370,10 @@ export default function ManagementPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {rooms.map((room) => (
-              <div key={room._id} className="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
+              <div key={room._id} className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-zinc-400">Sig'im: {room.size} kishi</span>
+                    <span className="text-xs text-zinc-400 dark:text-zinc-500">Sig'im: {room.size} kishi</span>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => {
@@ -381,19 +381,19 @@ export default function ManagementPage() {
                           setRoomForm({ name: room.name, size: room.size });
                           setIsRoomEditOpen(true);
                         }}
-                        className="p-1 text-zinc-400 hover:text-indigo-600 rounded-md hover:bg-zinc-100"
+                        className="p-1 text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 hover:dark:text-indigo-400 rounded-md hover:bg-zinc-100 hover:dark:bg-zinc-800"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeleteRoom(room._id)}
-                        className="p-1 text-zinc-400 hover:text-rose-600 rounded-md hover:bg-zinc-100"
+                        className="p-1 text-zinc-400 dark:text-zinc-500 hover:text-rose-600 hover:dark:text-rose-400 rounded-md hover:bg-zinc-100 hover:dark:bg-zinc-800"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
-                  <h3 className="text-base font-bold text-zinc-900">{room.name}</h3>
+                  <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">{room.name}</h3>
                 </div>
               </div>
             ))}
@@ -421,9 +421,9 @@ export default function ManagementPage() {
               <Plus className="w-4 h-4 mr-1.5" /> Xodim qo'shish
             </Button>
           </div>
-          <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
             <table className="w-full text-left text-sm">
-              <thead className="bg-zinc-50 border-b border-zinc-200/80 text-zinc-500 text-xs font-semibold uppercase">
+              <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200/80 dark:border-zinc-800/80 text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase">
                 <tr>
                   <th className="px-6 py-3.5">F.I.SH</th>
                   <th className="px-6 py-3.5">Lavozim</th>
@@ -432,13 +432,13 @@ export default function ManagementPage() {
                   <th className="px-6 py-3.5 text-right">Amallar</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100">
+              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                 {staff.map((st) => (
                   <tr key={st._id}>
-                    <td className="px-6 py-4 font-medium text-zinc-900">{st.first_name} {st.last_name}</td>
-                    <td className="px-6 py-4 text-zinc-600">{st.position}</td>
-                    <td className="px-6 py-4 text-zinc-500 font-mono text-xs">{st.phone}</td>
-                    <td className="px-6 py-4 font-bold text-zinc-900">{formatPrice(st.salary)}</td>
+                    <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">{st.first_name} {st.last_name}</td>
+                    <td className="px-6 py-4 text-zinc-600 dark:text-zinc-400">{st.position}</td>
+                    <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{st.phone}</td>
+                    <td className="px-6 py-4 font-bold text-zinc-900 dark:text-zinc-50">{formatPrice(st.salary)}</td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
@@ -454,13 +454,13 @@ export default function ManagementPage() {
                             });
                             setIsStaffEditOpen(true);
                           }}
-                          className="p-1.5 text-zinc-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50"
+                          className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 hover:dark:text-indigo-400 rounded-lg hover:bg-indigo-50 hover:dark:bg-indigo-500/15"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDeleteStaff(st._id)}
-                          className="p-1.5 text-zinc-400 hover:text-rose-600 rounded-lg hover:bg-rose-50"
+                          className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-rose-600 hover:dark:text-rose-400 rounded-lg hover:bg-rose-50 hover:dark:bg-rose-500/15"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -482,32 +482,32 @@ export default function ManagementPage() {
       >
         <form onSubmit={isCourseEditOpen ? handleUpdateCourse : handleCreateCourse} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Kurs nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Kurs nomi</label>
             <input
               required
               value={courseForm.name}
               onChange={(e) => setCourseForm({ ...courseForm, name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Oylik to'lov narxi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Oylik to'lov narxi</label>
             <input
               type="number"
               required
               value={courseForm.price || ''}
               onChange={(e) => setCourseForm({ ...courseForm, price: Number(e.target.value) })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Tavsif</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tavsif</label>
             <textarea
               rows={2}
               required
               value={courseForm.description}
               onChange={(e) => setCourseForm({ ...courseForm, description: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <Button type="submit" className="w-full">Saqlash</Button>
@@ -518,22 +518,22 @@ export default function ManagementPage() {
       <Modal isOpen={isTopicModalOpen} onClose={() => setIsTopicModalOpen(false)} title="Yangi mavzu qo'shish">
         <form onSubmit={handleCreateTopic} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Mavzu nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mavzu nomi</label>
             <input
               required
               value={topicForm.name}
               onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Tartib raqami</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tartib raqami</label>
             <input
               type="number"
               required
               value={topicForm.order}
               onChange={(e) => setTopicForm({ ...topicForm, order: Number(e.target.value) })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <Button type="submit" className="w-full">Qo'shish</Button>
@@ -544,22 +544,22 @@ export default function ManagementPage() {
       <Modal isOpen={isTopicEditOpen} onClose={() => setIsTopicEditOpen(false)} title="Mavzuni tahrirlash">
         <form onSubmit={handleUpdateTopic} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Mavzu nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mavzu nomi</label>
             <input
               required
               value={topicForm.name}
               onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Tartib raqami</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tartib raqami</label>
             <input
               type="number"
               required
               value={topicForm.order}
               onChange={(e) => setTopicForm({ ...topicForm, order: Number(e.target.value) })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <Button type="submit" className="w-full">Saqlash</Button>
@@ -570,22 +570,22 @@ export default function ManagementPage() {
       <Modal isOpen={isRoomModalOpen} onClose={() => setIsRoomModalOpen(false)} title="Yangi xona qo'shish">
         <form onSubmit={handleCreateRoom} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Xona nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Xona nomi</label>
             <input
               required
               value={roomForm.name}
               onChange={(e) => setRoomForm({ ...roomForm, name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Sig'im</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sig'im</label>
             <input
               type="number"
               required
               value={roomForm.size}
               onChange={(e) => setRoomForm({ ...roomForm, size: Number(e.target.value) })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <Button type="submit" className="w-full">Qo'shish</Button>
@@ -596,22 +596,22 @@ export default function ManagementPage() {
       <Modal isOpen={isRoomEditOpen} onClose={() => setIsRoomEditOpen(false)} title="Xonani tahrirlash">
         <form onSubmit={handleUpdateRoom} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Xona nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Xona nomi</label>
             <input
               required
               value={roomForm.name}
               onChange={(e) => setRoomForm({ ...roomForm, name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Sig'im</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sig'im</label>
             <input
               type="number"
               required
               value={roomForm.size}
               onChange={(e) => setRoomForm({ ...roomForm, size: Number(e.target.value) })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <Button type="submit" className="w-full">Saqlash</Button>
@@ -623,61 +623,61 @@ export default function ManagementPage() {
         <form onSubmit={handleCreateStaff} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Ism</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism</label>
               <input
                 required
                 value={staffForm.first_name}
                 onChange={(e) => setStaffForm({ ...staffForm, first_name: e.target.value })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Familiya</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya</label>
               <input
                 required
                 value={staffForm.last_name}
                 onChange={(e) => setStaffForm({ ...staffForm, last_name: e.target.value })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Telefon</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Telefon</label>
             <input
               required
               value={staffForm.phone}
               onChange={(e) => setStaffForm({ ...staffForm, phone: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Lavozim</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Lavozim</label>
             <input
               required
               value={staffForm.position}
               onChange={(e) => setStaffForm({ ...staffForm, position: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Oylik maosh</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Oylik maosh</label>
               <input
                 type="number"
                 required
                 value={staffForm.salary || ''}
                 onChange={(e) => setStaffForm({ ...staffForm, salary: Number(e.target.value) })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Ishga kirgan sana</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ishga kirgan sana</label>
               <input
                 type="date"
                 required
                 value={staffForm.hire_date}
                 onChange={(e) => setStaffForm({ ...staffForm, hire_date: e.target.value })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
           </div>
@@ -690,41 +690,41 @@ export default function ManagementPage() {
         <form onSubmit={handleUpdateStaff} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Ism</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ism</label>
               <input
                 required
                 value={staffForm.first_name}
                 onChange={(e) => setStaffForm({ ...staffForm, first_name: e.target.value })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Familiya</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Familiya</label>
               <input
                 required
                 value={staffForm.last_name}
                 onChange={(e) => setStaffForm({ ...staffForm, last_name: e.target.value })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Lavozim</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Lavozim</label>
             <input
               required
               value={staffForm.position}
               onChange={(e) => setStaffForm({ ...staffForm, position: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Oylik maosh</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Oylik maosh</label>
             <input
               type="number"
               required
               value={staffForm.salary}
               onChange={(e) => setStaffForm({ ...staffForm, salary: Number(e.target.value) })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <Button type="submit" className="w-full">Saqlash</Button>

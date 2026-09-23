@@ -29,12 +29,12 @@ export default function StudentGradesPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-zinc-900">Baholarim</h1>
-          <p className="text-sm text-zinc-500">Darslarda qo'yilgan barcha baholar</p>
+          <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">Baholarim</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Darslarda qo'yilgan barcha baholar</p>
         </div>
-        <div className="bg-white border border-zinc-200/80 px-4 py-2.5 rounded-2xl shadow-xs flex items-center gap-3">
-          <span className="text-xs text-zinc-500 font-medium">O'rtacha ko'rsatkich:</span>
-          <span className="text-lg font-extrabold text-indigo-600 font-mono">{averageScore} ball</span>
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 px-4 py-2.5 rounded-2xl shadow-xs flex items-center gap-3">
+          <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">O'rtacha ko'rsatkich:</span>
+          <span className="text-lg font-extrabold text-indigo-600 dark:text-indigo-400 font-mono">{averageScore} ball</span>
         </div>
       </div>
 
@@ -45,25 +45,25 @@ export default function StudentGradesPage() {
           description="O'qituvchilar sizga hali baho qo'yishmagan."
         />
       ) : (
-        <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
           <table className="w-full text-left text-sm">
-            <thead className="bg-zinc-50 border-b border-zinc-200/80 text-zinc-500 text-xs font-semibold uppercase">
+            <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200/80 dark:border-zinc-800/80 text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase">
               <tr>
                 <th className="px-6 py-3.5">Dars</th>
                 <th className="px-6 py-3.5">Ball (0-100)</th>
                 <th className="px-6 py-3.5">O'qituvchi izohi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100">
+            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
               {grades.map((grade) => (
-                <tr key={grade._id} className="hover:bg-zinc-50/50">
-                  <td className="px-6 py-4 font-medium text-zinc-900">{getRelationName(grade.lesson_id)}</td>
+                <tr key={grade._id} className="hover:bg-zinc-50/50 hover:dark:bg-zinc-800/50">
+                  <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">{getRelationName(grade.lesson_id)}</td>
                   <td className="px-6 py-4">
-                    <span className="font-bold font-mono text-zinc-900 px-2.5 py-1 rounded-lg bg-zinc-100">
+                    <span className="font-bold font-mono text-zinc-900 dark:text-zinc-50 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800">
                       {grade.score}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-zinc-500 text-xs">{grade.comment || '-'}</td>
+                  <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 text-xs">{grade.comment || '-'}</td>
                 </tr>
               ))}
             </tbody>

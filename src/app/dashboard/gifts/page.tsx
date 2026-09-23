@@ -140,8 +140,8 @@ export default function AdminGiftsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">Sovg'alar va Koinlar</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">Rag'batlantirish tizimi, do'kon va balanslar</p>
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Sovg'alar va Koinlar</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Rag'batlantirish tizimi, do'kon va balanslar</p>
         </div>
         {activeTab === 'gifts' && (
           <Button onClick={() => setIsGiftModalOpen(true)}>
@@ -150,11 +150,11 @@ export default function AdminGiftsPage() {
         )}
       </div>
 
-      <div className="flex items-center gap-2 border-b border-zinc-200">
+      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800">
         <button
           onClick={() => setActiveTab('gifts')}
           className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
-            activeTab === 'gifts' ? 'border-indigo-600 text-indigo-600 font-semibold' : 'border-transparent text-zinc-500 hover:text-zinc-700'
+            activeTab === 'gifts' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold' : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 hover:dark:text-zinc-300'
           }`}
         >
           Sovg'alar do'koni
@@ -162,7 +162,7 @@ export default function AdminGiftsPage() {
         <button
           onClick={() => setActiveTab('coins')}
           className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
-            activeTab === 'coins' ? 'border-indigo-600 text-indigo-600 font-semibold' : 'border-transparent text-zinc-500 hover:text-zinc-700'
+            activeTab === 'coins' ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold' : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 hover:dark:text-zinc-300'
           }`}
         >
           Koin berish
@@ -172,34 +172,34 @@ export default function AdminGiftsPage() {
       {activeTab === 'gifts' && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {gifts.map((gift) => (
-            <div key={gift._id} className="bg-white border border-zinc-200/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
+            <div key={gift._id} className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-600 flex items-center gap-1 font-mono">
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center gap-1 font-mono">
                     <Coins className="w-3.5 h-3.5" /> {gift.price_coin} koin
                   </span>
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => openEditGift(gift)}
-                      className="p-1 text-zinc-400 hover:text-indigo-600 rounded-md hover:bg-zinc-100"
+                      className="p-1 text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 hover:dark:text-indigo-400 rounded-md hover:bg-zinc-100 hover:dark:bg-zinc-800"
                       title="Tahrirlash"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDeleteGift(gift._id)}
-                      className="p-1 text-zinc-400 hover:text-rose-600 rounded-md hover:bg-zinc-100"
+                      className="p-1 text-zinc-400 dark:text-zinc-500 hover:text-rose-600 hover:dark:text-rose-400 rounded-md hover:bg-zinc-100 hover:dark:bg-zinc-800"
                       title="O'chirish"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
-                <h3 className="text-base font-bold text-zinc-900">{gift.name}</h3>
-                <p className="text-xs text-zinc-500 mt-1">{gift.description || "Tavsif yo'q"}</p>
-                <span className="text-xs text-zinc-400 block mt-2">Mavjud zaxira: {gift.stock} dona</span>
+                <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">{gift.name}</h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{gift.description || "Tavsif yo'q"}</p>
+                <span className="text-xs text-zinc-400 dark:text-zinc-500 block mt-2">Mavjud zaxira: {gift.stock} dona</span>
               </div>
-              <div className="mt-5 pt-3 border-t border-zinc-100">
+              <div className="mt-5 pt-3 border-t border-zinc-100 dark:border-zinc-800">
                 <Button
                   size="sm"
                   variant="secondary"
@@ -221,16 +221,16 @@ export default function AdminGiftsPage() {
       )}
 
       {activeTab === 'coins' && (
-        <div className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs max-w-xl">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-6 shadow-xs max-w-xl">
           <form onSubmit={handleGiveCoins} className="space-y-4">
-            <h3 className="text-base font-bold text-zinc-900">O'quvchiga koin berish yoki ayirish</h3>
+            <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">O'quvchiga koin berish yoki ayirish</h3>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">O'quvchini tanlang</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">O'quvchini tanlang</label>
               <select
                 required
                 value={coinForm.student_id}
                 onChange={(e) => setCoinForm({ ...coinForm, student_id: e.target.value })}
-                className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               >
                 <option value="">O'quvchini tanlang</option>
                 {students.map((s) => (
@@ -239,7 +239,7 @@ export default function AdminGiftsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                 Koin miqdori (manfiy son ham mumkin: masalan -20)
               </label>
               <input
@@ -247,17 +247,17 @@ export default function AdminGiftsPage() {
                 required
                 value={coinForm.amount || ''}
                 onChange={(e) => setCoinForm({ ...coinForm, amount: Number(e.target.value) })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Sabab / Izoh</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sabab / Izoh</label>
               <input
                 required
                 value={coinForm.reason}
                 onChange={(e) => setCoinForm({ ...coinForm, reason: e.target.value })}
                 placeholder="Masalan: Faol qatnashgani uchun"
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
             <Button type="submit">Tasdiqlash</Button>
@@ -269,45 +269,45 @@ export default function AdminGiftsPage() {
       <Modal isOpen={isGiftModalOpen} onClose={() => setIsGiftModalOpen(false)} title="Yangi sovg'a qo'shish">
         <form onSubmit={handleCreateGift} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Sovg'a nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sovg'a nomi</label>
             <input
               required
               value={giftForm.name}
               onChange={(e) => setGiftForm({ ...giftForm, name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Narxi (koin)</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Narxi (koin)</label>
               <input
                 type="number"
                 required
                 min="1"
                 value={giftForm.price_coin || ''}
                 onChange={(e) => setGiftForm({ ...giftForm, price_coin: Number(e.target.value) })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Zaxira soni</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Zaxira soni</label>
               <input
                 type="number"
                 required
                 min="1"
                 value={giftForm.stock || ''}
                 onChange={(e) => setGiftForm({ ...giftForm, stock: Number(e.target.value) })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Tavsif</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tavsif</label>
             <textarea
               rows={2}
               value={giftForm.description}
               onChange={(e) => setGiftForm({ ...giftForm, description: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <Button type="submit" className="w-full">Qo'shish</Button>
@@ -318,45 +318,45 @@ export default function AdminGiftsPage() {
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} title="Sovg'ani tahrirlash">
         <form onSubmit={handleUpdateGift} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Sovg'a nomi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sovg'a nomi</label>
             <input
               required
               value={editGiftForm.name}
               onChange={(e) => setEditGiftForm({ ...editGiftForm, name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Narxi (koin)</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Narxi (koin)</label>
               <input
                 type="number"
                 required
                 min="1"
                 value={editGiftForm.price_coin}
                 onChange={(e) => setEditGiftForm({ ...editGiftForm, price_coin: Number(e.target.value) })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">Zaxira soni</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Zaxira soni</label>
               <input
                 type="number"
                 required
                 min="0"
                 value={editGiftForm.stock}
                 onChange={(e) => setEditGiftForm({ ...editGiftForm, stock: Number(e.target.value) })}
-                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Tavsif</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Tavsif</label>
             <textarea
               rows={2}
               value={editGiftForm.description}
               onChange={(e) => setEditGiftForm({ ...editGiftForm, description: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
           <Button type="submit" className="w-full">Saqlash</Button>
@@ -366,23 +366,23 @@ export default function AdminGiftsPage() {
       {/* Sovg'a topshirish modali */}
       <Modal isOpen={isRedeemModalOpen} onClose={() => setIsRedeemModalOpen(false)} title={`Sovg'a topshirish: ${selectedGift?.name}`}>
         <div className="space-y-4">
-          <div className="p-3 bg-zinc-50 border border-zinc-200/80 rounded-xl text-xs space-y-1">
+          <div className="p-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl text-xs space-y-1">
             <div className="flex justify-between">
-              <span className="text-zinc-500">Narxi:</span>
-              <span className="font-bold text-amber-600 font-mono">{selectedGift?.price_coin} koin</span>
+              <span className="text-zinc-500 dark:text-zinc-400">Narxi:</span>
+              <span className="font-bold text-amber-600 dark:text-amber-400 font-mono">{selectedGift?.price_coin} koin</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-zinc-500">Mavjud zaxira:</span>
-              <span className="font-bold text-zinc-900">{selectedGift?.stock} dona</span>
+              <span className="text-zinc-500 dark:text-zinc-400">Mavjud zaxira:</span>
+              <span className="font-bold text-zinc-900 dark:text-zinc-50">{selectedGift?.stock} dona</span>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">O'quvchini tanlang</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">O'quvchini tanlang</label>
             <select
               value={redeemStudentId}
               onChange={(e) => handleStudentSelectForRedeem(e.target.value)}
-              className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             >
               <option value="">Tanlang</option>
               {students.map((s) => (
@@ -394,8 +394,8 @@ export default function AdminGiftsPage() {
           {studentBalance !== null && (
             <div className={`p-3 rounded-xl text-xs flex justify-between items-center ${
               studentBalance >= (selectedGift?.price_coin || 0)
-                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                : 'bg-rose-50 text-rose-800 border border-rose-200'
+                ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-500/30'
+                : 'bg-rose-50 dark:bg-rose-500/15 text-rose-800 dark:text-rose-200 border border-rose-200 dark:border-rose-500/30'
             }`}>
               <span>O'quvchi balansi:</span>
               <span className="font-bold font-mono">{studentBalance} koin</span>

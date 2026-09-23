@@ -10,14 +10,27 @@ export const metadata: Metadata = {
   description: 'Oliy sifatdagi o‘quv markazni boshqarish platformasi',
 };
 
+const themeInitScript = `
+(function () {
+  try {
+    var stored = localStorage.getItem('theme');
+    var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="uz" className="h-full">
-      <body className={`${inter.className} min-h-screen bg-[#fafafa] text-[#18181b] antialiased`}>
+    <html lang="uz" className="h-full" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className={`${inter.className} min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50 antialiased transition-colors`}>
         <Providers>
           {children}
         </Providers>

@@ -339,23 +339,23 @@ export default function AdminGroupDetailPage() {
   return (
     <div className="space-y-6">
       {/* Guruh bosh kartasi */}
-      <div className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
               {getCourseName(group?.course_id)}
             </span>
-            <span className="text-xs text-zinc-400 font-mono flex items-center gap-1">
+            <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
               {group?.lesson_time} ({Array.isArray(group?.lesson_days) ? group?.lesson_days.join(', ') : ''})
             </span>
             <span
               className={`text-xs font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 ${
                 assignedRooms.length === 1
-                  ? 'bg-emerald-50 text-emerald-700'
+                  ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
                   : assignedRooms.length > 1
-                  ? 'bg-amber-50 text-amber-700'
-                  : 'bg-zinc-100 text-zinc-500'
+                  ? 'bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300'
+                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400'
               }`}
               title={assignedRooms.length > 1 ? "Diqqat: guruh bir nechta xonada birikkan, 'Xona biriktirish' oynasidan ortiqchasini chiqarib tashlang" : undefined}
             >
@@ -368,9 +368,9 @@ export default function AdminGroupDetailPage() {
             </span>
           </div>
 
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">{group?.name}</h1>
-          <p className="text-xs text-zinc-500 mt-1">
-            O'qituvchi: <span className="font-medium text-zinc-700">{getTeacherName(group?.teacher)}</span>
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">{group?.name}</h1>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+            O'qituvchi: <span className="font-medium text-zinc-700 dark:text-zinc-300">{getTeacherName(group?.teacher)}</span>
           </p>
         </div>
 
@@ -388,7 +388,7 @@ export default function AdminGroupDetailPage() {
       </div>
 
       {/* Tablar menyusi */}
-      <div className="flex items-center gap-2 border-b border-zinc-200">
+      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800">
         {[
           { key: 'info', label: `O'quvchilar (${students.length})`, icon: Users },
           { key: 'grades', label: 'Baholash', icon: Award },
@@ -402,8 +402,8 @@ export default function AdminGroupDetailPage() {
               onClick={() => setActiveTab(tab.key as any)}
               className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
                 active
-                  ? 'border-indigo-600 text-indigo-600 font-semibold'
-                  : 'border-transparent text-zinc-500 hover:text-zinc-700'
+                  ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 font-semibold'
+                  : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 hover:dark:text-zinc-300'
               }`}
             >
               <Icon className="w-4 h-4" /> {tab.label}
@@ -414,7 +414,7 @@ export default function AdminGroupDetailPage() {
 
       {/* 1. O'quvchilar ro'yxati tabi */}
       {activeTab === 'info' && (
-        <div className="bg-white border border-zinc-200/80 rounded-2xl overflow-hidden shadow-xs">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
           {students.length === 0 ? (
             <EmptyState
               icon={Users}
@@ -423,7 +423,7 @@ export default function AdminGroupDetailPage() {
             />
           ) : (
             <table className="w-full text-left text-sm">
-              <thead className="bg-zinc-50 border-b border-zinc-200/80 text-zinc-500 text-xs font-semibold uppercase tracking-wider">
+              <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200/80 dark:border-zinc-800/80 text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider">
                 <tr>
                   <th className="px-6 py-3.5">F.I.SH</th>
                   <th className="px-6 py-3.5">Telefon raqam</th>
@@ -432,34 +432,34 @@ export default function AdminGroupDetailPage() {
                   <th className="px-6 py-3.5 text-right">Amallar</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100">
+              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                 {students.map((s) => {
                   const isSuspended = suspendedIds.includes(s._id);
 
                   return (
                     <tr
                       key={s._id}
-                      className={isSuspended ? 'bg-rose-50/50 hover:bg-rose-50/70' : 'hover:bg-zinc-50/50'}
+                      className={isSuspended ? 'bg-rose-50 dark:bg-rose-500/15/50 hover:bg-rose-50 hover:dark:bg-rose-500/15/70' : 'hover:bg-zinc-50/50 hover:dark:bg-zinc-800/50'}
                     >
-                      <td className="px-6 py-4 font-medium text-zinc-900">
+                      <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">
                         <div className="flex items-center gap-2">
                           <span>{s.first_name} {s.last_name}</span>
                           {isSuspended && (
-                            <span className="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-bold">
+                            <span className="text-[10px] bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded-full font-bold">
                               Muzlatilgan
                             </span>
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-zinc-500 font-mono text-xs">{formatPhone(s.phone)}</td>
-                      <td className="px-6 py-4 text-zinc-500 font-mono text-xs">{s.login}</td>
+                      <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{formatPhone(s.phone)}</td>
+                      <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{s.login}</td>
                       <td className="px-6 py-4">
                         {isSuspended ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200">
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/15 px-2.5 py-1 rounded-full border border-rose-200 dark:border-rose-500/30">
                             <Ban className="w-3.5 h-3.5" /> To'lov qilinmagan
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/30">
                             <ShieldCheck className="w-3.5 h-3.5" /> To'langan (Faol)
                           </span>
                         )}
@@ -472,7 +472,7 @@ export default function AdminGroupDetailPage() {
                             className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors shadow-xs ${
                               isSuspended
                                 ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                                : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
+                                : 'bg-amber-100 dark:bg-amber-500/20 text-amber-900 dark:text-amber-200 hover:bg-amber-200 hover:dark:bg-amber-500/25'
                             }`}
                             title={isSuspended ? "To'lov qilindi deb faollashtirish" : "To'lov qilinmagani uchun muzlatish"}
                           >
@@ -482,7 +482,7 @@ export default function AdminGroupDetailPage() {
                           {/* GURUHDAN CHIQARISH TUGMASI */}
                           <button
                             onClick={() => handleRemoveStudent(s._id, `${s.first_name} ${s.last_name}`)}
-                            className="inline-flex items-center gap-1 p-1.5 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-100 transition-colors"
+                            className="inline-flex items-center gap-1 p-1.5 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-100 hover:dark:bg-rose-500/20 transition-colors"
                             title="Guruhdan chiqarish"
                           >
                             <UserMinus className="w-4 h-4" />
@@ -500,7 +500,7 @@ export default function AdminGroupDetailPage() {
 
       {/* 2. Baholash tabi */}
       {activeTab === 'grades' && (
-        <div className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs space-y-6">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-6 shadow-xs space-y-6">
           {lessons.length === 0 ? (
             <EmptyState
               icon={BookOpen}
@@ -510,13 +510,13 @@ export default function AdminGroupDetailPage() {
           ) : (
             <>
               <div className="max-w-xs">
-                <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                   Darsni tanlang:
                 </label>
                 <select
                   value={selectedLesson}
                   onChange={(e) => setSelectedLesson(e.target.value)}
-                  className="w-full text-sm font-medium bg-white border border-zinc-200 rounded-xl px-3.5 py-2"
+                  className="w-full text-sm font-medium bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3.5 py-2"
                 >
                   {lessons.map((l) => (
                     <option key={l._id} value={l._id}>
@@ -526,10 +526,10 @@ export default function AdminGroupDetailPage() {
                 </select>
               </div>
 
-              <div className="divide-y divide-zinc-100">
+              <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                 {students.map((s) => (
                   <div key={s._id} className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <span className="text-sm font-medium text-zinc-900">
+                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
                       {s.first_name} {s.last_name}
                     </span>
                     <div className="flex items-center gap-3">
@@ -546,7 +546,7 @@ export default function AdminGroupDetailPage() {
                             [s._id]: { ...prev[s._id], score: val },
                           }));
                         }}
-                        className="w-28 text-sm font-mono border border-zinc-200 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-28 text-sm font-mono border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                       <input
                         type="text"
@@ -559,7 +559,7 @@ export default function AdminGroupDetailPage() {
                             [s._id]: { ...prev[s._id], comment: val },
                           }));
                         }}
-                        className="w-56 text-sm border border-zinc-200 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-56 text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                     </div>
                   </div>
@@ -576,7 +576,7 @@ export default function AdminGroupDetailPage() {
 
       {/* 3. Davomat tabi */}
       {activeTab === 'attendance' && (
-        <div className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs space-y-6">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-6 shadow-xs space-y-6">
           {lessons.length === 0 ? (
             <EmptyState
               icon={CalendarCheck}
@@ -586,13 +586,13 @@ export default function AdminGroupDetailPage() {
           ) : (
             <>
               <div className="max-w-xs">
-                <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                   Darsni tanlang:
                 </label>
                 <select
                   value={selectedLesson}
                   onChange={(e) => setSelectedLesson(e.target.value)}
-                  className="w-full text-sm font-medium bg-white border border-zinc-200 rounded-xl px-3.5 py-2"
+                  className="w-full text-sm font-medium bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3.5 py-2"
                 >
                   {lessons.map((l) => (
                     <option key={l._id} value={l._id}>
@@ -602,10 +602,10 @@ export default function AdminGroupDetailPage() {
                 </select>
               </div>
 
-              <div className="divide-y divide-zinc-100">
+              <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                 {students.map((s) => (
                   <div key={s._id} className="py-3 flex items-center justify-between">
-                    <span className="text-sm font-medium text-zinc-900">
+                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
                       {s.first_name} {s.last_name}
                     </span>
                     <div className="flex gap-1.5">
@@ -627,7 +627,7 @@ export default function AdminGroupDetailPage() {
                                   : status === 'sababli'
                                   ? 'bg-blue-500 text-white'
                                   : 'bg-rose-600 text-white'
-                                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+                                : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 hover:dark:bg-zinc-700'
                             }`}
                           >
                             {status}
@@ -655,23 +655,23 @@ export default function AdminGroupDetailPage() {
       >
         <form onSubmit={handleUpdateGroup} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Guruh nomi (kamida 5 belgi)</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Guruh nomi (kamida 5 belgi)</label>
             <input
               required
               minLength={5}
               value={editForm.name}
               onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Kurs</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Kurs</label>
             <select
               required
               value={editForm.course_id}
               onChange={(e) => setEditForm({ ...editForm, course_id: e.target.value })}
-              className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             >
               <option value="">Kursni tanlang</option>
               {courses.map((c) => (
@@ -683,11 +683,11 @@ export default function AdminGroupDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">O'qituvchi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">O'qituvchi</label>
             <select
               value={editForm.teacher}
               onChange={(e) => setEditForm({ ...editForm, teacher: e.target.value })}
-              className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             >
               <option value="">O'qituvchini biriktirish (ixtiyoriy)</option>
               {teachers.map((t) => (
@@ -699,18 +699,18 @@ export default function AdminGroupDetailPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1">Dars vaqti</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars vaqti</label>
             <input
               required
               value={editForm.lesson_time}
               onChange={(e) => setEditForm({ ...editForm, lesson_time: e.target.value })}
               placeholder="Masalan: 09:00 - 11:00"
-              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1.5">Dars kunlari</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Dars kunlari</label>
             <div className="flex flex-wrap gap-2">
               {['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'].map((d) => {
                 const active = editForm.lesson_days.includes(d);
@@ -722,7 +722,7 @@ export default function AdminGroupDetailPage() {
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                       active
                         ? 'bg-indigo-600 text-white'
-                        : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
+                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 hover:dark:bg-zinc-700'
                     }`}
                   >
                     {d}
@@ -746,17 +746,17 @@ export default function AdminGroupDetailPage() {
       >
         <div className="space-y-4">
           <div className="relative">
-            <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-zinc-400 dark:text-zinc-500 absolute left-3 top-2.5" />
             <input
               type="text"
               placeholder="Ism, familiya yoki telefon..."
               value={studentSearch}
               onChange={(e) => setStudentSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full pl-9 pr-3 py-2 text-xs border border-zinc-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
-          <div className="max-h-60 overflow-y-auto divide-y divide-zinc-100">
+          <div className="max-h-60 overflow-y-auto divide-y divide-zinc-100 dark:divide-zinc-800">
             {filteredCandidates.map((std) => {
               const isAlreadyIn = students.some((s) => s._id === std._id);
               const isSelected = selectedToAdd.includes(std._id);
@@ -764,14 +764,14 @@ export default function AdminGroupDetailPage() {
               return (
                 <div key={std._id} className="py-2.5 flex items-center justify-between">
                   <div>
-                    <span className="text-sm font-medium text-zinc-900 block">
+                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50 block">
                       {std.first_name} {std.last_name}
                     </span>
-                    <span className="text-xs text-zinc-400 font-mono">{formatPhone(std.phone)}</span>
+                    <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">{formatPhone(std.phone)}</span>
                   </div>
 
                   {isAlreadyIn ? (
-                    <span className="text-xs text-zinc-400 bg-zinc-100 px-2.5 py-1 rounded-md">
+                    <span className="text-xs text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 rounded-md">
                       Guruhda mavjud
                     </span>
                   ) : (
@@ -785,7 +785,7 @@ export default function AdminGroupDetailPage() {
                       className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
                         isSelected
                           ? 'bg-indigo-600 text-white'
-                          : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
+                          : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 hover:dark:bg-zinc-700'
                       }`}
                     >
                       {isSelected ? 'Tanlandi' : 'Tanlash'}
@@ -813,7 +813,7 @@ export default function AdminGroupDetailPage() {
         title="Guruhga xona biriktirish"
       >
         <div className="space-y-4">
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
             Kun va vaqt to'qnashib qolsa, tizim xonani biriktirishga yo'l qo'ymaydi va sababini ko'rsatadi.
           </p>
 
@@ -824,7 +824,7 @@ export default function AdminGroupDetailPage() {
               description="Avval 'Tizim boshqaruvi' bo'limidan xona qo'shing."
             />
           ) : (
-            <div className="max-h-72 overflow-y-auto divide-y divide-zinc-100">
+            <div className="max-h-72 overflow-y-auto divide-y divide-zinc-100 dark:divide-zinc-800">
               {rooms.map((room) => {
                 const isAssignedHere = assignedRooms.some((r) => r._id === room._id);
                 const isAssigning = assigningRoomId === room._id;
@@ -833,13 +833,13 @@ export default function AdminGroupDetailPage() {
                 return (
                   <div key={room._id} className="py-3 flex items-center justify-between gap-3">
                     <div>
-                      <span className="text-sm font-medium text-zinc-900 block">{room.name}</span>
-                      <span className="text-xs text-zinc-400">Sig'im: {room.size} kishi &middot; Band guruhlar: {room.group_id.length}</span>
+                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50 block">{room.name}</span>
+                      <span className="text-xs text-zinc-400 dark:text-zinc-500">Sig'im: {room.size} kishi &middot; Band guruhlar: {room.group_id.length}</span>
                     </div>
 
                     {isAssignedHere ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md font-medium">
+                        <span className="text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 px-2.5 py-1 rounded-md font-medium">
                           Hozirgi xona
                         </span>
                         <Button
