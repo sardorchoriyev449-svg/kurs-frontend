@@ -8,9 +8,10 @@ import {
   coursesApi,
   lessonsApi,
   gradesApi,
-  attendanceApi
+  attendanceApi,
+  classRoomsApi
 } from '@/lib/api';
-import { Group, User, Course, Lesson, AttendanceStatus } from '@/types';
+import { Group, User, Course, Lesson, AttendanceStatus, ClassRoom } from '@/types';
 import { suspensionManager } from '@/lib/suspension';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
@@ -29,7 +30,8 @@ import {
   Clock,
   Edit3,
   ShieldCheck,
-  Ban
+  Ban,
+  DoorOpen
 } from 'lucide-react';
 
 export default function AdminGroupDetailPage() {
@@ -43,6 +45,7 @@ export default function AdminGroupDetailPage() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [rooms, setRooms] = useState<ClassRoom[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
@@ -64,19 +67,24 @@ export default function AdminGroupDetailPage() {
     lesson_days: [] as string[],
   });
 
+  // Xona biriktirish modali
+  const [isRoomAssignOpen, setIsRoomAssignOpen] = useState(false);
+  const [assigningRoomId, setAssigningRoomId] = useState<string | null>(null);
+
   // Baholar & Davomat form holatlari
   const [gradesInput, setGradesInput] = useState<{ [studentId: string]: { score: number; comment: string } }>({});
   const [attendanceRecords, setAttendanceRecords] = useState<{ [studentId: string]: AttendanceStatus }>({});
 
   const loadData = useCallback(async () => {
     try {
-      const [grpRes, stdRes, lsnRes, allStdRes, usrRes, crsRes] = await Promise.all([
+      const [grpRes, stdRes, lsnRes, allStdRes, usrRes, crsRes, roomsRes] = await Promise.all([
         groupsApi.getOne(id),
         groupsApi.getStudents(id),
         lessonsApi.getByGroup(id),
         usersApi.getStudents(),
         usersApi.getAll(),
         coursesApi.getAll(),
+        classRoomsApi.getAll(),
       ]);
 
       if (grpRes.success && grpRes.data) setGroup(grpRes.data);
@@ -84,6 +92,7 @@ export default function AdminGroupDetailPage() {
       if (allStdRes.success && allStdRes.data) setAllStudents(allStdRes.data);
       if (usrRes.success && usrRes.data) setAllUsers(usrRes.data);
       if (crsRes.success && crsRes.data) setCourses(crsRes.data);
+      if (roomsRes.success && roomsRes.data) setRooms(roomsRes.data);
 
       if (lsnRes.success && lsnRes.data) {
         setLessons(lsnRes.data);
@@ -193,6 +202,22 @@ export default function AdminGroupDetailPage() {
     }
   };
 
+  // XONA BIRIKTIRISH
+  const handleAssignRoom = async (roomId: string) => {
+    setAssigningRoomId(roomId);
+    const res = await classRoomsApi.assignGroup(roomId, id);
+    setAssigningRoomId(null);
+
+    if (res.success) {
+      toast.success("Guruh xonaga muvaffaqiyatli biriktirildi");
+      setIsRoomAssignOpen(false);
+      loadData();
+    } else {
+      // Backend kun/vaqt to'qnashganda yoki xona allaqachon biriktirilganda shu yerga tushadi
+      toast.error(res.message || "Xonani biriktirib bo'lmadi");
+    }
+  };
+
   const getTeacherName = (teacher: unknown): string => {
     if (!teacher) return 'Biriktirilmagan';
     if (typeof teacher === 'object' && teacher !== null) {
@@ -278,6 +303,11 @@ export default function AdminGroupDetailPage() {
     `${std.first_name} ${std.last_name} ${std.phone}`.toLowerCase().includes(studentSearch.toLowerCase())
   );
 
+  // Ushbu guruh hozir biriktirilgan xonani topish (ClassRoom.group_id massivi ichidan)
+  const currentRoom = rooms.find((r) =>
+    r.group_id.some((g) => (typeof g === 'string' ? g : g._id) === id)
+  );
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -292,13 +322,21 @@ export default function AdminGroupDetailPage() {
       {/* Guruh bosh kartasi */}
       <div className="bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
               {getCourseName(group?.course_id)}
             </span>
             <span className="text-xs text-zinc-400 font-mono flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
               {group?.lesson_time} ({Array.isArray(group?.lesson_days) ? group?.lesson_days.join(', ') : ''})
+            </span>
+            <span
+              className={`text-xs font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 ${
+                currentRoom ? 'bg-emerald-50 text-emerald-700' : 'bg-zinc-100 text-zinc-500'
+              }`}
+            >
+              <DoorOpen className="w-3.5 h-3.5" />
+              {currentRoom ? currentRoom.name : 'Xona biriktirilmagan'}
             </span>
           </div>
 
@@ -309,6 +347,9 @@ export default function AdminGroupDetailPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
+          <Button variant="secondary" onClick={() => setIsRoomAssignOpen(true)}>
+            <DoorOpen className="w-4 h-4 mr-1.5" /> Xona biriktirish
+          </Button>
           <Button variant="secondary" onClick={handleOpenEditModal}>
             <Edit3 className="w-4 h-4 mr-1.5" /> Tahrirlash
           </Button>
@@ -734,6 +775,58 @@ export default function AdminGroupDetailPage() {
           >
             Tanlanganlarni guruhga qo'shish ({selectedToAdd.length})
           </Button>
+        </div>
+      </Modal>
+
+      {/* Xona biriktirish modali */}
+      <Modal
+        isOpen={isRoomAssignOpen}
+        onClose={() => setIsRoomAssignOpen(false)}
+        title="Guruhga xona biriktirish"
+      >
+        <div className="space-y-4">
+          <p className="text-xs text-zinc-500">
+            Kun va vaqt to'qnashib qolsa, tizim xonani biriktirishga yo'l qo'ymaydi va sababini ko'rsatadi.
+          </p>
+
+          {rooms.length === 0 ? (
+            <EmptyState
+              icon={DoorOpen}
+              title="Xonalar mavjud emas"
+              description="Avval 'Tizim boshqaruvi' bo'limidan xona qo'shing."
+            />
+          ) : (
+            <div className="max-h-72 overflow-y-auto divide-y divide-zinc-100">
+              {rooms.map((room) => {
+                const isCurrent = room._id === currentRoom?._id;
+                const isBusy = assigningRoomId === room._id;
+
+                return (
+                  <div key={room._id} className="py-3 flex items-center justify-between gap-3">
+                    <div>
+                      <span className="text-sm font-medium text-zinc-900 block">{room.name}</span>
+                      <span className="text-xs text-zinc-400">Sig'im: {room.size} kishi &middot; Band guruhlar: {room.group_id.length}</span>
+                    </div>
+
+                    {isCurrent ? (
+                      <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md font-medium">
+                        Hozirgi xona
+                      </span>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        disabled={isBusy}
+                        onClick={() => handleAssignRoom(room._id)}
+                      >
+                        {isBusy ? 'Biriktirilmoqda...' : 'Biriktirish'}
+                      </Button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </Modal>
     </div>
