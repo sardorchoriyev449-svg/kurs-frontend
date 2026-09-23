@@ -152,6 +152,11 @@ export default function TeacherGroupFullManagementPage() {
   const usedTopicIds = new Set(lessons.map((l) => getRelationId(l.topic_id)).filter(Boolean));
   const availableTopics = topics.filter((t) => !usedTopicIds.has(t._id));
 
+  // Xuddi shunday - bu guruhda allaqachon uy vazifasi berilgan mavzular
+  // yangi vazifa yaratishda qayta tanlanmaydi.
+  const usedAssignmentTopicIds = new Set(assignments.map((a) => getRelationId(a.topic_id)).filter(Boolean));
+  const availableTopicsForAssignment = topics.filter((t) => !usedAssignmentTopicIds.has(t._id));
+
   const loadData = useCallback(async () => {
     try {
       const [grpRes, stdRes, lsnRes, hmwRes, crsRes, frzRes] = await Promise.all([
@@ -874,10 +879,15 @@ export default function TeacherGroupFullManagementPage() {
               className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             >
               <option value="">Tanlang</option>
-              {topics.map((t) => (
+              {availableTopicsForAssignment.map((t) => (
                 <option key={t._id} value={t._id}>{t.name}</option>
               ))}
             </select>
+            {availableTopicsForAssignment.length < topics.length && (
+              <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1">
+                Allaqachon vazifa berilgan mavzular ro'yxatda ko'rinmaydi.
+              </p>
+            )}
           </div>
 
           <div>
