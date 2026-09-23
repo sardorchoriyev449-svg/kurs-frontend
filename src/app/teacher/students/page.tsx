@@ -6,7 +6,7 @@ import { Group, User } from '@/types';
 import { suspensionManager } from '@/lib/suspension';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Users, Search, ShieldCheck, Ban } from 'lucide-react';
+import { Users, Search, ShieldCheck } from 'lucide-react';
 
 interface StudentWithGroup extends User {
   groupName: string;
@@ -60,7 +60,9 @@ export default function TeacherAllStudentsPage() {
     return `+998 ${phone}`;
   };
 
-  const filteredStudents = students.filter((s) => {
+  const activeStudents = students.filter((s) => !suspensionManager.isSuspended(s.groupId, s._id));
+
+  const filteredStudents = activeStudents.filter((s) => {
     const matchesGroup = selectedGroup === 'all' || s.groupId === selectedGroup;
     const query = search.toLowerCase();
     const matchesSearch =
@@ -100,7 +102,7 @@ export default function TeacherAllStudentsPage() {
               onChange={(e) => setSelectedGroup(e.target.value)}
               className="w-full text-sm font-medium bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3.5 py-2 shadow-xs focus:ring-2 focus:ring-indigo-500"
             >
-              <option value="all">Barcha guruhlar ({students.length})</option>
+              <option value="all">Barcha guruhlar ({activeStudents.length})</option>
               {groups.map((g) => (
                 <option key={g._id} value={g._id}>
                   {g.name}
@@ -133,35 +135,25 @@ export default function TeacherAllStudentsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {filteredStudents.map((std, idx) => {
-                const isSuspended = suspensionManager.isSuspended(std.groupId, std._id);
-
-                return (
-                  <tr key={`${std._id}_${idx}`} className={isSuspended ? 'bg-rose-50/40 dark:bg-rose-500/10' : 'hover:bg-zinc-50/50 hover:dark:bg-zinc-800/50'}>
-                    <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">
-                      {std.first_name} {std.last_name}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
-                        {std.groupName}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{formatPhone(std.phone)}</td>
-                    <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{std.login}</td>
-                    <td className="px-6 py-4 text-right">
-                      {isSuspended ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/15 px-2.5 py-1 rounded-full border border-rose-200 dark:border-rose-500/30">
-                          <Ban className="w-3.5 h-3.5" /> To'lov qilinmagan
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/30">
-                          <ShieldCheck className="w-3.5 h-3.5" /> Faol
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
+              {filteredStudents.map((std, idx) => (
+                <tr key={`${std._id}_${idx}`} className="hover:bg-zinc-50/50 hover:dark:bg-zinc-800/50">
+                  <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">
+                    {std.first_name} {std.last_name}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                      {std.groupName}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{formatPhone(std.phone)}</td>
+                  <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{std.login}</td>
+                  <td className="px-6 py-4 text-right">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/30">
+                      <ShieldCheck className="w-3.5 h-3.5" /> Faol
+                    </span>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

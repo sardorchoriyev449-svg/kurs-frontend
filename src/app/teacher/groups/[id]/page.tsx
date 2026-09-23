@@ -44,8 +44,7 @@ import {
   Clock,
   Paperclip,
   Users,
-  ShieldCheck,
-  Ban
+  ShieldCheck
 } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
@@ -498,7 +497,7 @@ export default function TeacherGroupFullManagementPage() {
       {/* Tablar */}
       <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 overflow-x-auto">
         {[
-          { key: 'students', label: `O'quvchilar (${allGroupStudents.length})`, icon: Users },
+          { key: 'students', label: `O'quvchilar (${activeStudents.length})`, icon: Users },
           { key: 'lessons', label: `Darslar (${lessons.length})`, icon: BookOpen },
           { key: 'homework', label: `Vazifalar (${assignments.length})`, icon: FileCheck },
           { key: 'grades', label: 'Baholash', icon: Award },
@@ -523,7 +522,7 @@ export default function TeacherGroupFullManagementPage() {
       {/* 0. O'quvchilar Tabi (YANGI QO'SHILDI) */}
       {activeTab === 'students' && (
         <div className="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
-          {allGroupStudents.length === 0 ? (
+          {activeStudents.length === 0 ? (
             <EmptyState
               icon={Users}
               title="Guruhda hali o'quvchilar yo'q"
@@ -540,30 +539,20 @@ export default function TeacherGroupFullManagementPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-                {allGroupStudents.map((std) => {
-                  const isSuspended = suspensionManager.isSuspended(groupId, std._id);
-
-                  return (
-                    <tr key={std._id} className={isSuspended ? 'bg-rose-50/40 dark:bg-rose-500/10' : 'hover:bg-zinc-50/50 hover:dark:bg-zinc-800/50'}>
-                      <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">
-                        {std.first_name} {std.last_name}
-                      </td>
-                      <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{formatPhone(std.phone)}</td>
-                      <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{std.login}</td>
-                      <td className="px-6 py-4 text-right">
-                        {isSuspended ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/15 px-2.5 py-1 rounded-full border border-rose-200 dark:border-rose-500/30">
-                            <Ban className="w-3.5 h-3.5" /> To'lov qilinmagan (Muzlatilgan)
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/30">
-                            <ShieldCheck className="w-3.5 h-3.5" /> Faol
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
+                {activeStudents.map((std) => (
+                  <tr key={std._id} className="hover:bg-zinc-50/50 hover:dark:bg-zinc-800/50">
+                    <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">
+                      {std.first_name} {std.last_name}
+                    </td>
+                    <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{formatPhone(std.phone)}</td>
+                    <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{std.login}</td>
+                    <td className="px-6 py-4 text-right">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/30">
+                        <ShieldCheck className="w-3.5 h-3.5" /> Faol
+                      </span>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           )}
