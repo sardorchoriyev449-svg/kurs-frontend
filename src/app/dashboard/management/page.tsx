@@ -237,7 +237,12 @@ export default function ManagementPage() {
       {activeTab === 'courses' && (
         <div className="space-y-4">
           <div className="flex justify-end">
-            <Button onClick={() => setIsCourseModalOpen(true)}>
+            <Button
+              onClick={() => {
+                setCourseForm({ name: '', price: 0, description: '' });
+                setIsCourseModalOpen(true);
+              }}
+            >
               <Plus className="w-4 h-4 mr-1.5" /> Yangi kurs
             </Button>
           </div>
@@ -293,7 +298,12 @@ export default function ManagementPage() {
                 ))}
               </select>
             </div>
-            <Button onClick={() => setIsTopicModalOpen(true)}>
+            <Button
+              onClick={() => {
+                setTopicForm({ name: '', order: topics.length + 1 });
+                setIsTopicModalOpen(true);
+              }}
+            >
               <Plus className="w-4 h-4 mr-1.5" /> Mavzu qo'shish
             </Button>
           </div>
@@ -349,7 +359,12 @@ export default function ManagementPage() {
       {activeTab === 'rooms' && (
         <div className="space-y-4">
           <div className="flex justify-end">
-            <Button onClick={() => setIsRoomModalOpen(true)}>
+            <Button
+              onClick={() => {
+                setRoomForm({ name: '', size: 20 });
+                setIsRoomModalOpen(true);
+              }}
+            >
               <Plus className="w-4 h-4 mr-1.5" /> Xona qo'shish
             </Button>
           </div>
@@ -390,7 +405,19 @@ export default function ManagementPage() {
       {activeTab === 'staff' && (
         <div className="space-y-4">
           <div className="flex justify-end">
-            <Button onClick={() => setIsStaffModalOpen(true)}>
+            <Button
+              onClick={() => {
+                setStaffForm({
+                  first_name: '',
+                  last_name: '',
+                  phone: '',
+                  position: '',
+                  salary: 0,
+                  hire_date: new Date().toISOString().split('T')[0],
+                });
+                setIsStaffModalOpen(true);
+              }}
+            >
               <Plus className="w-4 h-4 mr-1.5" /> Xodim qo'shish
             </Button>
           </div>
@@ -487,6 +514,32 @@ export default function ManagementPage() {
         </form>
       </Modal>
 
+      {/* Mavzu qo'shish modali */}
+      <Modal isOpen={isTopicModalOpen} onClose={() => setIsTopicModalOpen(false)} title="Yangi mavzu qo'shish">
+        <form onSubmit={handleCreateTopic} className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 mb-1">Mavzu nomi</label>
+            <input
+              required
+              value={topicForm.name}
+              onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
+              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 mb-1">Tartib raqami</label>
+            <input
+              type="number"
+              required
+              value={topicForm.order}
+              onChange={(e) => setTopicForm({ ...topicForm, order: Number(e.target.value) })}
+              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+            />
+          </div>
+          <Button type="submit" className="w-full">Qo'shish</Button>
+        </form>
+      </Modal>
+
       {/* Mavzu tahrirlash modali */}
       <Modal isOpen={isTopicEditOpen} onClose={() => setIsTopicEditOpen(false)} title="Mavzuni tahrirlash">
         <form onSubmit={handleUpdateTopic} className="space-y-4">
@@ -513,6 +566,32 @@ export default function ManagementPage() {
         </form>
       </Modal>
 
+      {/* Xona qo'shish modali */}
+      <Modal isOpen={isRoomModalOpen} onClose={() => setIsRoomModalOpen(false)} title="Yangi xona qo'shish">
+        <form onSubmit={handleCreateRoom} className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 mb-1">Xona nomi</label>
+            <input
+              required
+              value={roomForm.name}
+              onChange={(e) => setRoomForm({ ...roomForm, name: e.target.value })}
+              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 mb-1">Sig'im</label>
+            <input
+              type="number"
+              required
+              value={roomForm.size}
+              onChange={(e) => setRoomForm({ ...roomForm, size: Number(e.target.value) })}
+              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+            />
+          </div>
+          <Button type="submit" className="w-full">Qo'shish</Button>
+        </form>
+      </Modal>
+
       {/* Xona tahrirlash modali */}
       <Modal isOpen={isRoomEditOpen} onClose={() => setIsRoomEditOpen(false)} title="Xonani tahrirlash">
         <form onSubmit={handleUpdateRoom} className="space-y-4">
@@ -536,6 +615,73 @@ export default function ManagementPage() {
             />
           </div>
           <Button type="submit" className="w-full">Saqlash</Button>
+        </form>
+      </Modal>
+
+      {/* Xodim qo'shish modali */}
+      <Modal isOpen={isStaffModalOpen} onClose={() => setIsStaffModalOpen(false)} title="Yangi xodim qo'shish">
+        <form onSubmit={handleCreateStaff} className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-zinc-700 mb-1">Ism</label>
+              <input
+                required
+                value={staffForm.first_name}
+                onChange={(e) => setStaffForm({ ...staffForm, first_name: e.target.value })}
+                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-zinc-700 mb-1">Familiya</label>
+              <input
+                required
+                value={staffForm.last_name}
+                onChange={(e) => setStaffForm({ ...staffForm, last_name: e.target.value })}
+                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 mb-1">Telefon</label>
+            <input
+              required
+              value={staffForm.phone}
+              onChange={(e) => setStaffForm({ ...staffForm, phone: e.target.value })}
+              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-700 mb-1">Lavozim</label>
+            <input
+              required
+              value={staffForm.position}
+              onChange={(e) => setStaffForm({ ...staffForm, position: e.target.value })}
+              className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-zinc-700 mb-1">Oylik maosh</label>
+              <input
+                type="number"
+                required
+                value={staffForm.salary || ''}
+                onChange={(e) => setStaffForm({ ...staffForm, salary: Number(e.target.value) })}
+                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-zinc-700 mb-1">Ishga kirgan sana</label>
+              <input
+                type="date"
+                required
+                value={staffForm.hire_date}
+                onChange={(e) => setStaffForm({ ...staffForm, hire_date: e.target.value })}
+                className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
+              />
+            </div>
+          </div>
+          <Button type="submit" className="w-full">Qo'shish</Button>
         </form>
       </Modal>
 
