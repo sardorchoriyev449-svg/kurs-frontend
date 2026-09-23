@@ -80,6 +80,8 @@ export const groupsApi = {
     request<Group>(`/groups/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   addStudents: (id: string, students: string[]) =>
     request<Group>(`/groups/${id}/add-students`, { method: 'POST', body: JSON.stringify({ students }) }),
+  setSuspension: (groupId: string, studentId: string, suspended: boolean) =>
+    request(`/groups/${groupId}/students/${studentId}/suspension`, { method: 'PUT', body: JSON.stringify({ suspended }) }),
 };
 
 export const coursesApi = {

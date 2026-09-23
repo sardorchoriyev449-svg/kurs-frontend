@@ -33,6 +33,7 @@ export interface Group {
   lesson_days: string[];
   teacher?: string | Partial<User>;
   students: (string | Partial<User>)[];
+  suspended_students?: string[];
   course_id: string | { _id: string; name: string; price: number };
 }
 

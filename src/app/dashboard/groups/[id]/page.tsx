@@ -12,7 +12,6 @@ import {
   classRoomsApi
 } from '@/lib/api';
 import { Group, User, Course, Lesson, AttendanceStatus, ClassRoom } from '@/types';
-import { suspensionManager } from '@/lib/suspension';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -49,8 +48,8 @@ export default function AdminGroupDetailPage() {
   const [selectedLesson, setSelectedLesson] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
-  // Muzlatilgan o'quvchilar ro'yxati
-  const [suspendedIds, setSuspendedIds] = useState<string[]>([]);
+  // Muzlatilgan o'quvchilar ro'yxati (backend'dan, guruh ma'lumoti ichida keladi)
+  const suspendedIds = group?.suspended_students ?? [];
 
   // O'quvchi biriktirish modali
   const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
@@ -110,20 +109,24 @@ export default function AdminGroupDetailPage() {
 
   useEffect(() => {
     loadData();
-    // Muzlatilganlar ro'yxatini olish
-    setSuspendedIds(suspensionManager.getSuspendedIds(id));
   }, [loadData, id]);
 
   // MUZLATISH / FAOLLASHTIRISH BOSILGANDA:
-  const handleToggleSuspend = (studentId: string, studentName: string) => {
-    const isNowSuspended = suspensionManager.toggleSuspension(id, studentId);
-    setSuspendedIds(suspensionManager.getSuspendedIds(id));
+  const handleToggleSuspend = async (studentId: string, studentName: string) => {
+    const isCurrentlySuspended = suspendedIds.includes(studentId);
+    const res = await groupsApi.setSuspension(id, studentId, !isCurrentlySuspended);
 
-    if (isNowSuspended) {
+    if (!res.success) {
+      toast.error(res.message || "Holatni o'zgartirib bo'lmadi");
+      return;
+    }
+
+    if (!isCurrentlySuspended) {
       toast.error(`${studentName} to'lov qilinmagani sababli vaqtincha muzlatildi`);
     } else {
       toast.success(`${studentName} qayta faollashtirildi!`);
     }
+    loadData();
   };
 
   const formatPhone = (phone?: string) => {

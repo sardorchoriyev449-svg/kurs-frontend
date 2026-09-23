@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { groupsApi } from '@/lib/api';
 import { Group, User } from '@/types';
-import { suspensionManager } from '@/lib/suspension';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Users, Search, ShieldCheck } from 'lucide-react';
@@ -60,7 +59,10 @@ export default function TeacherAllStudentsPage() {
     return `+998 ${phone}`;
   };
 
-  const activeStudents = students.filter((s) => !suspensionManager.isSuspended(s.groupId, s._id));
+  const activeStudents = students.filter((s) => {
+    const grp = groups.find((g) => g._id === s.groupId);
+    return !(grp?.suspended_students ?? []).includes(s._id);
+  });
 
   const filteredStudents = activeStudents.filter((s) => {
     const matchesGroup = selectedGroup === 'all' || s.groupId === selectedGroup;

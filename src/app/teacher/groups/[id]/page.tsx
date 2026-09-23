@@ -24,7 +24,6 @@ import {
   AttendanceStatus
 } from '@/types';
 import { getRelationId } from '@/lib/utils';
-import { suspensionManager } from '@/lib/suspension';
 import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -168,9 +167,8 @@ export default function TeacherGroupFullManagementPage() {
         setAllGroupStudents(stdRes.data);
 
         // Faol o'quvchilar (to'lov qilganlar)
-        const actives = stdRes.data.filter(
-          (s) => !suspensionManager.isSuspended(groupId, s._id)
-        );
+        const suspendedIds = grpRes.success && grpRes.data ? grpRes.data.suspended_students ?? [] : [];
+        const actives = stdRes.data.filter((s) => !suspendedIds.includes(s._id));
         setActiveStudents(actives);
 
         const attMap: { [id: string]: AttendanceStatus } = {};
@@ -378,7 +376,7 @@ export default function TeacherGroupFullManagementPage() {
     const res = await homeworkAssignmentsApi.getStatus(assignment._id);
     if (res.success && res.data) {
       const activeReviewList = res.data.filter(
-        (item) => !suspensionManager.isSuspended(groupId, item.student._id)
+        (item) => !(group?.suspended_students ?? []).includes(item.student._id)
       );
       setReviewList(activeReviewList);
       setReviewModalOpen(true);
@@ -404,7 +402,7 @@ export default function TeacherGroupFullManagementPage() {
       const updated = await homeworkAssignmentsApi.getStatus(activeAssignmentForReview._id);
       if (updated.success && updated.data) {
         const activeReviewList = updated.data.filter(
-          (item) => !suspensionManager.isSuspended(groupId, item.student._id)
+          (item) => !(group?.suspended_students ?? []).includes(item.student._id)
         );
         setReviewList(activeReviewList);
       }
