@@ -9,6 +9,15 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    const backendOrigin = process.env.BACKEND_ORIGIN || 'https://kurs-backend-brmq.onrender.com';
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${backendOrigin}/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

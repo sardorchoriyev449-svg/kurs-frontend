@@ -15,7 +15,12 @@ import {
   Staff
 } from '../types';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+// Barcha so'rovlar shu frontend domenidan /api orqali ketadi (next.config.ts rewrites
+// bilan backendga proksi qilinadi). Shunday qilinishining sababi: agar fetch to'g'ridan-to'g'ri
+// boshqa domendagi backendga (masalan onrender.com) yuborilsa, brauzerlar login cookie'sini
+// "uchinchi tomon cookie'si" deb bloklashi mumkin va foydalanuvchi kirgandan keyin ham
+// tizim uni tanimay qoladi.
+const BASE_URL = '/api';
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
   const headers = new Headers(options.headers || {});
