@@ -8,7 +8,18 @@ import { useToast } from '@/contexts/ToastContext';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Badge } from '@/components/ui/EmptyState';
-import { Plus, Trash2, Edit3, Search, Filter, Eye, EyeOff } from 'lucide-react';
+import { Plus, Trash2, Edit3, Search, Filter, Eye, EyeOff, Wand2, Pencil } from 'lucide-react';
+
+// Ism/familyadan login uchun mos satr hosil qilish: kichik harflarga o'tkazish,
+// apostrof (o', g' belgilaridagi) olib tashlash, bo'shliqni "_" bilan almashtirish.
+function slugifyForLogin(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[ʼ'`’]/g, '')
+    .trim()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_]/g, '');
+}
 
 export default function UsersPage() {
   const { user: currentUser } = useAuth();
@@ -21,6 +32,9 @@ export default function UsersPage() {
   // Yaratish modali
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [showCreatePassword, setShowCreatePassword] = useState(false);
+  // Avtomatik: login/parol ism-familya va telefondan o'zi hosil bo'ladi.
+  // Qo'lda: admin login/parolni o'zi kiritadi.
+  const [credentialMode, setCredentialMode] = useState<'auto' | 'manual'>('auto');
   const [form, setForm] = useState({
     first_name: '',
     last_name: '',
@@ -29,6 +43,16 @@ export default function UsersPage() {
     login: '',
     password: '',
   });
+
+  // Avtomatik rejimda ism/familya/telefon o'zgarganda login va parolni yangilab turadi
+  useEffect(() => {
+    if (credentialMode !== 'auto') return;
+    const autoLogin = form.first_name && form.last_name
+      ? `${slugifyForLogin(form.first_name)}_${slugifyForLogin(form.last_name)}`
+      : '';
+    setForm((prev) => ({ ...prev, login: autoLogin, password: prev.phone }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [credentialMode, form.first_name, form.last_name, form.phone]);
 
   // Tahrirlash modali
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -169,7 +193,7 @@ export default function UsersPage() {
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Foydalanuvchilar</h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Tizimdagi barcha talaba, o'qituvchi va xodimlar</p>
         </div>
-        <Button onClick={() => setIsCreateOpen(true)}>
+        <Button onClick={() => { setCredentialMode('auto'); setIsCreateOpen(true); }}>
           <Plus className="w-4 h-4 mr-1.5" /> Foydalanuvchi qo'shish
         </Button>
       </div>
@@ -357,14 +381,47 @@ export default function UsersPage() {
               className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
             />
           </div>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Login va parol</span>
+            <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg p-0.5">
+              <button
+                type="button"
+                onClick={() => setCredentialMode('auto')}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
+                  credentialMode === 'auto'
+                    ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 hover:dark:text-zinc-200'
+                }`}
+              >
+                <Wand2 className="w-3 h-3" /> Avtomatik
+              </button>
+              <button
+                type="button"
+                onClick={() => setCredentialMode('manual')}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
+                  credentialMode === 'manual'
+                    ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 hover:dark:text-zinc-200'
+                }`}
+              >
+                <Pencil className="w-3 h-3" /> Qo'lda
+              </button>
+            </div>
+          </div>
+          {credentialMode === 'auto' && (
+            <p className="text-[11px] text-zinc-400 dark:text-zinc-500 -mt-2">
+              Login: ism_familiya, Parol: telefon raqami &mdash; ism, familiya va telefon kiritilgach avtomatik to'ldiriladi.
+            </p>
+          )}
           <div>
             <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Login (min 6)</label>
             <input
               required
               minLength={6}
+              readOnly={credentialMode === 'auto'}
               value={form.login}
               onChange={(e) => setForm({ ...form, login: e.target.value })}
-              className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
+              className={`w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 ${credentialMode === 'auto' ? 'bg-zinc-50 dark:bg-zinc-950 text-zinc-500 dark:text-zinc-400' : ''}`}
             />
           </div>
           <div>
@@ -374,9 +431,10 @@ export default function UsersPage() {
                 type={showCreatePassword ? 'text' : 'password'}
                 required
                 minLength={8}
+                readOnly={credentialMode === 'auto'}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 pr-10"
+                className={`w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 pr-10 ${credentialMode === 'auto' ? 'bg-zinc-50 dark:bg-zinc-950 text-zinc-500 dark:text-zinc-400' : ''}`}
               />
               <button
                 type="button"
