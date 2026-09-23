@@ -226,6 +226,7 @@ export default function GroupsPage() {
             <input
               required
               value={form.lesson_time}
+              type='time'
               onChange={(e) => setForm({ ...form, lesson_time: e.target.value })}
               placeholder="14:00 - 16:00"
               className="w-full text-sm border border-zinc-200 rounded-xl px-3 py-2"
