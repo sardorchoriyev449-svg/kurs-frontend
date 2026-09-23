@@ -146,6 +146,11 @@ export default function TeacherGroupFullManagementPage() {
     return found ? found.name : null;
   };
 
+  // Bu guruhda allaqachon dars sifatida o'tilgan mavzular yangi dars
+  // yaratishda qayta tanlanmasligi uchun ro'yxatdan chiqarib tashlanadi.
+  const usedTopicIds = new Set(lessons.map((l) => getRelationId(l.topic_id)).filter(Boolean));
+  const availableTopics = topics.filter((t) => !usedTopicIds.has(t._id));
+
   const loadData = useCallback(async () => {
     try {
       const [grpRes, stdRes, lsnRes, hmwRes, crsRes, frzRes] = await Promise.all([
@@ -276,8 +281,8 @@ export default function TeacherGroupFullManagementPage() {
     }
 
     const lsnRes = await lessonsApi.create({
-      name: lessonForm.name,
-      description: lessonForm.description,
+      name: lessonForm.name.trim() || undefined,
+      description: lessonForm.description.trim() || undefined,
       group_id: groupId,
       topic_id: finalTopicId,
       date: lessonForm.date,
@@ -1034,9 +1039,10 @@ export default function TeacherGroupFullManagementPage() {
         <form onSubmit={handleSaveLessonWithAttendance} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars nomi</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                Dars nomi <span className="text-zinc-400 font-normal">(ixtiyoriy, mavzu tanlansa shu nom bo'ladi)</span>
+              </label>
               <input
-                required
                 value={lessonForm.name}
                 onChange={(e) => setLessonForm({ ...lessonForm, name: e.target.value })}
                 className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
@@ -1078,11 +1084,19 @@ export default function TeacherGroupFullManagementPage() {
             {lessonForm.topic_mode === 'select' ? (
               <select
                 value={lessonForm.topic_id}
-                onChange={(e) => setLessonForm({ ...lessonForm, topic_id: e.target.value })}
+                onChange={(e) => {
+                  const topicId = e.target.value;
+                  const topic = topics.find((t) => t._id === topicId);
+                  setLessonForm({
+                    ...lessonForm,
+                    topic_id: topicId,
+                    name: topic ? topic.name : lessonForm.name,
+                  });
+                }}
                 className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               >
                 <option value="">Tanlang (ixtiyoriy)</option>
-                {topics.map((t) => (
+                {availableTopics.map((t) => (
                   <option key={t._id} value={t._id}>{t.name}</option>
                 ))}
               </select>
@@ -1094,13 +1108,19 @@ export default function TeacherGroupFullManagementPage() {
                 className="w-full text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"
               />
             )}
+            {lessonForm.topic_mode === 'select' && availableTopics.length < topics.length && (
+              <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+                O'tilgan mavzular ro'yxatda ko'rinmaydi.
+              </p>
+            )}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">Dars tavsifi</label>
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+              Dars tavsifi <span className="text-zinc-400 font-normal">(ixtiyoriy)</span>
+            </label>
             <textarea
               rows={2}
-              required
               value={lessonForm.description}
               onChange={(e) => setLessonForm({ ...lessonForm, description: e.target.value })}
               className="w-full text-sm border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2"

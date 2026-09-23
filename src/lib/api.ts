@@ -115,7 +115,7 @@ export const lessonsApi = {
   getAll: () => request<Lesson[]>('/lessons'),
   getByGroup: (groupId: string) => request<Lesson[]>(`/lessons/group/${groupId}`),
   getOne: (id: string) => request<Lesson>(`/lessons/${id}`),
-  create: (data: { name: string; description: string; group_id: string; topic_id?: string; date?: string; video_uri?: string; file_uri?: string }) =>
+  create: (data: { name?: string; description?: string; group_id: string; topic_id?: string; date?: string; video_uri?: string; file_uri?: string }) =>
     request<Lesson>('/lessons', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: string, data: Partial<Lesson>) =>
     request<Lesson>(`/lessons/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
