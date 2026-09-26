@@ -67,6 +67,9 @@ export const usersApi = {
   updateRole: (id: string, role: string) =>
     request<User>(`/users/${id}/role`, { method: 'PUT', body: JSON.stringify({ role }) }),
   delete: (id: string) => request(`/users/${id}`, { method: 'DELETE' }),
+  getArchived: () => request<User[]>('/users/archive'),
+  restore: (id: string) => request(`/users/archive/${id}/restore`, { method: 'PUT' }),
+  permanentDelete: (id: string) => request(`/users/archive/${id}`, { method: 'DELETE' }),
 };
 
 

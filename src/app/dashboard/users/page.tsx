@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Badge } from '@/components/ui/EmptyState';
 import { Required } from '@/components/ui/Required';
-import { Plus, Trash2, Edit3, Search, Filter, Eye, EyeOff, Wand2, Pencil } from 'lucide-react';
+import { Plus, Trash2, Edit3, Search, Filter, Eye, EyeOff, Wand2, Pencil, Archive, ArchiveRestore } from 'lucide-react';
 
 // Ism/familyadan login uchun mos satr hosil qilish: kichik harflarga o'tkazish,
 // apostrof (o', g' belgilaridagi) olib tashlash, bo'shliqni "_" bilan almashtirish.
@@ -67,6 +67,11 @@ export default function UsersPage() {
     password: '',
   });
 
+  // Arxiv oynasi
+  const [isArchiveOpen, setIsArchiveOpen] = useState(false);
+  const [archivedUsers, setArchivedUsers] = useState<User[]>([]);
+  const [archiveLoading, setArchiveLoading] = useState(false);
+
   const loadUsers = async () => {
     setLoading(true);
     const res = await usersApi.getAll();
@@ -74,6 +79,15 @@ export default function UsersPage() {
       setUsers(res.data);
     }
     setLoading(false);
+  };
+
+  const loadArchivedUsers = async () => {
+    setArchiveLoading(true);
+    const res = await usersApi.getArchived();
+    if (res.success && res.data) {
+      setArchivedUsers(res.data);
+    }
+    setArchiveLoading(false);
   };
 
   useEffect(() => {
@@ -144,11 +158,33 @@ export default function UsersPage() {
   };
 
   const handleDelete = async (userId: string) => {
-    if (!confirm("Foydalanuvchini o'chirishga ishonchingiz komilmi?")) return;
+    if (!confirm("Foydalanuvchini arxivga o'tkazishga ishonchingiz komilmi? (Arxivdan keyin tiklash mumkin)")) return;
     const res = await usersApi.delete(userId);
     if (res.success) {
-      toast.success("Foydalanuvchi o'chirildi");
+      toast.success("Foydalanuvchi arxivga o'tkazildi");
       loadUsers();
+    } else {
+      toast.error(res.message || "O'chirib bo'lmadi");
+    }
+  };
+
+  const handleRestore = async (userId: string) => {
+    const res = await usersApi.restore(userId);
+    if (res.success) {
+      toast.success("Foydalanuvchi tiklandi");
+      loadArchivedUsers();
+      loadUsers();
+    } else {
+      toast.error(res.message || "Tiklab bo'lmadi");
+    }
+  };
+
+  const handlePermanentDelete = async (userId: string) => {
+    if (!confirm("Bu foydalanuvchi BUTUNLAY o'chadi, qaytarib bo'lmaydi. Davom etasizmi?")) return;
+    const res = await usersApi.permanentDelete(userId);
+    if (res.success) {
+      toast.success("Foydalanuvchi butunlay o'chirildi");
+      loadArchivedUsers();
     } else {
       toast.error(res.message || "O'chirib bo'lmadi");
     }
@@ -194,9 +230,14 @@ export default function UsersPage() {
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Foydalanuvchilar</h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Tizimdagi barcha talaba, o'qituvchi va xodimlar</p>
         </div>
-        <Button onClick={() => { setCredentialMode('auto'); setIsCreateOpen(true); }}>
-          <Plus className="w-4 h-4 mr-1.5" /> Foydalanuvchi qo'shish
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" onClick={() => { setIsArchiveOpen(true); loadArchivedUsers(); }}>
+            <Archive className="w-4 h-4 mr-1.5" /> Arxiv
+          </Button>
+          <Button onClick={() => { setCredentialMode('auto'); setIsCreateOpen(true); }}>
+            <Plus className="w-4 h-4 mr-1.5" /> Foydalanuvchi qo'shish
+          </Button>
+        </div>
       </div>
 
       {/* Rol filtri tugmalari (Tabs) */}
@@ -520,6 +561,60 @@ export default function UsersPage() {
           </div>
           <Button type="submit" className="w-full mt-2">Saqlash</Button>
         </form>
+      </Modal>
+
+      {/* Arxiv oynasi */}
+      <Modal isOpen={isArchiveOpen} onClose={() => setIsArchiveOpen(false)} title="Arxivlangan foydalanuvchilar" maxWidth="2xl">
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 -mt-2 mb-4">
+          O'chirilgan foydalanuvchilar shu yerda saqlanadi. Tiklash mumkin, yoki butunlay o'chirish mumkin (bu holatda qaytarib bo'lmaydi).
+        </p>
+        {archiveLoading ? (
+          <p className="text-center text-zinc-400 dark:text-zinc-500 py-8">Yuklanmoqda...</p>
+        ) : archivedUsers.length === 0 ? (
+          <p className="text-center text-zinc-400 dark:text-zinc-500 py-8">Arxiv bo'sh</p>
+        ) : (
+          <div className="border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200/80 dark:border-zinc-800/80 text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider">
+                <tr>
+                  <th className="px-4 py-3">F.I.SH</th>
+                  <th className="px-4 py-3">Login</th>
+                  <th className="px-4 py-3">Rol</th>
+                  <th className="px-4 py-3 text-right">Amallar</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                {archivedUsers.map((u) => (
+                  <tr key={u._id}>
+                    <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-50">{u.first_name} {u.last_name}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-zinc-500 dark:text-zinc-400">{u.login}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant="zinc">{u.role}</Badge>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => handleRestore(u._id)}
+                          className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-emerald-600 hover:dark:text-emerald-400 rounded-lg hover:bg-emerald-50 hover:dark:bg-emerald-500/15 transition-colors"
+                          title="Tiklash"
+                        >
+                          <ArchiveRestore className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handlePermanentDelete(u._id)}
+                          className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-rose-600 hover:dark:text-rose-400 rounded-lg hover:bg-rose-50 hover:dark:bg-rose-500/15 transition-colors"
+                          title="Butunlay o'chirish"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </Modal>
     </div>
   );

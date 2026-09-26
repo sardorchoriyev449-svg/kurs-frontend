@@ -9,6 +9,7 @@ export interface User {
   login: string;
   role: UserRole;
   avatar?: string;
+  archived?: boolean;
   createdAt?: string;
 }
 
