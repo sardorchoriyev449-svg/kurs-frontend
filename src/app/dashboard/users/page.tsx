@@ -190,6 +190,59 @@ export default function UsersPage() {
     }
   };
 
+  // Belgilab, ko'pini birdaniga arxivga o'tkazish / tiklash / butunlay
+  // o'chirish uchun (bittalab bosib chiqishning o'rniga)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectedArchiveIds, setSelectedArchiveIds] = useState<Set<string>>(new Set());
+  const [bulkLoading, setBulkLoading] = useState(false);
+
+  const toggleSelected = (set: React.Dispatch<React.SetStateAction<Set<string>>>, id: string) => {
+    set((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    if (!confirm(`${selectedIds.size} ta foydalanuvchini arxivga o'tkazishga ishonchingiz komilmi?`)) return;
+    setBulkLoading(true);
+    const results = await Promise.all(Array.from(selectedIds).map((id) => usersApi.delete(id)));
+    const failed = results.filter((r) => !r.success).length;
+    setBulkLoading(false);
+    setSelectedIds(new Set());
+    if (failed > 0) toast.error(`${failed} tasi o'tkazilmadi`);
+    else toast.success("Tanlanganlar arxivga o'tkazildi");
+    loadUsers();
+  };
+
+  const handleBulkRestore = async () => {
+    if (selectedArchiveIds.size === 0) return;
+    setBulkLoading(true);
+    const results = await Promise.all(Array.from(selectedArchiveIds).map((id) => usersApi.restore(id)));
+    const failed = results.filter((r) => !r.success).length;
+    setBulkLoading(false);
+    setSelectedArchiveIds(new Set());
+    if (failed > 0) toast.error(`${failed} tasi tiklanmadi`);
+    else toast.success("Tanlanganlar tiklandi");
+    loadArchivedUsers();
+    loadUsers();
+  };
+
+  const handleBulkPermanentDelete = async () => {
+    if (selectedArchiveIds.size === 0) return;
+    if (!confirm(`${selectedArchiveIds.size} ta foydalanuvchi BUTUNLAY o'chadi, qaytarib bo'lmaydi. Davom etasizmi?`)) return;
+    setBulkLoading(true);
+    const results = await Promise.all(Array.from(selectedArchiveIds).map((id) => usersApi.permanentDelete(id)));
+    const failed = results.filter((r) => !r.success).length;
+    setBulkLoading(false);
+    setSelectedArchiveIds(new Set());
+    if (failed > 0) toast.error(`${failed} tasi o'chmadi`);
+    else toast.success("Tanlanganlar butunlay o'chirildi");
+    loadArchivedUsers();
+  };
+
   // Har bir rol bo'yicha foydalanuvchilar soni
   const counts = useMemo(() => {
     return {
@@ -221,6 +274,10 @@ export default function UsersPage() {
       );
     });
   }, [users, selectedRole, search]);
+
+  // "Hammasini tanlash" faqat belgilash mumkin bo'lgan qatorlarga tegishli
+  // (o'zingiz va super adminni belgilab bo'lmaydi - amal tugmalari kabi)
+  const selectableUsers = filteredUsers.filter((u) => u._id !== currentUser?._id && u.role !== 'super_admin');
 
   return (
     <div className="space-y-6">
@@ -273,15 +330,25 @@ export default function UsersPage() {
         })}
       </div>
 
-      {/* Qidiruv qatori */}
-      <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-2.5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs max-w-sm">
-        <Search className="w-4 h-4 text-zinc-400 dark:text-zinc-500 ml-1.5" />
-        <input
-          placeholder="Ism, login yoki telefon orqali qidirish..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="text-xs sm:text-sm w-full focus:outline-none"
-        />
+      {/* Qidiruv qatori va ko'pini tanlab amal qilish */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-2.5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs max-w-sm">
+          <Search className="w-4 h-4 text-zinc-400 dark:text-zinc-500 ml-1.5" />
+          <input
+            placeholder="Ism, login yoki telefon orqali qidirish..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="text-xs sm:text-sm w-full focus:outline-none"
+          />
+        </div>
+        {selectedIds.size > 0 && (
+          <div className="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-500/15 border border-indigo-200 dark:border-indigo-500/30 rounded-2xl px-3 py-2">
+            <span className="text-xs font-semibold text-indigo-700 dark:text-indigo-300">{selectedIds.size} ta tanlandi</span>
+            <Button size="sm" variant="danger" onClick={handleBulkDelete} disabled={bulkLoading}>
+              <Trash2 className="w-3.5 h-3.5 mr-1" /> Arxivga o'tkazish
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Foydalanuvchilar jadvali */}
@@ -289,6 +356,16 @@ export default function UsersPage() {
         <table className="w-full text-left text-sm">
           <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200/80 dark:border-zinc-800/80 text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider">
             <tr>
+              <th className="px-4 py-3.5 w-10">
+                <input
+                  type="checkbox"
+                  className="rounded cursor-pointer"
+                  checked={selectableUsers.length > 0 && selectableUsers.every((u) => selectedIds.has(u._id))}
+                  onChange={(e) => {
+                    setSelectedIds(e.target.checked ? new Set(selectableUsers.map((u) => u._id)) : new Set());
+                  }}
+                />
+              </th>
               <th className="px-6 py-3.5">F.I.SH</th>
               <th className="px-6 py-3.5">Login / Tel</th>
               <th className="px-6 py-3.5">Rol</th>
@@ -299,11 +376,11 @@ export default function UsersPage() {
           <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-zinc-400 dark:text-zinc-500">Yuklanmoqda...</td>
+                <td colSpan={6} className="px-6 py-8 text-center text-zinc-400 dark:text-zinc-500">Yuklanmoqda...</td>
               </tr>
             ) : filteredUsers.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-zinc-400 dark:text-zinc-500">
+                <td colSpan={6} className="px-6 py-8 text-center text-zinc-400 dark:text-zinc-500">
                   Mos foydalanuvchilar topilmadi
                 </td>
               </tr>
@@ -314,6 +391,15 @@ export default function UsersPage() {
 
                 return (
                   <tr key={u._id} className={isSuperAdmin ? 'bg-zinc-50/50 dark:bg-zinc-800/50' : 'hover:bg-zinc-50/50 hover:dark:bg-zinc-800/50'}>
+                    <td className="px-4 py-4">
+                      <input
+                        type="checkbox"
+                        className="rounded cursor-pointer disabled:opacity-30"
+                        disabled={isMe || isSuperAdmin}
+                        checked={selectedIds.has(u._id)}
+                        onChange={() => toggleSelected(setSelectedIds, u._id)}
+                      />
+                    </td>
                     <td className="px-6 py-4 font-medium text-zinc-900 dark:text-zinc-50">
                       {u.first_name} {u.last_name}
                       {isMe && <span className="ml-2 text-xs text-indigo-600 dark:text-indigo-400 font-normal">(Siz)</span>}
@@ -573,10 +659,32 @@ export default function UsersPage() {
         ) : archivedUsers.length === 0 ? (
           <p className="text-center text-zinc-400 dark:text-zinc-500 py-8">Arxiv bo'sh</p>
         ) : (
+          <>
+            {selectedArchiveIds.size > 0 && (
+              <div className="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-500/15 border border-indigo-200 dark:border-indigo-500/30 rounded-2xl px-3 py-2 mb-3">
+                <span className="text-xs font-semibold text-indigo-700 dark:text-indigo-300">{selectedArchiveIds.size} ta tanlandi</span>
+                <Button size="sm" variant="secondary" onClick={handleBulkRestore} disabled={bulkLoading}>
+                  <ArchiveRestore className="w-3.5 h-3.5 mr-1" /> Tiklash
+                </Button>
+                <Button size="sm" variant="danger" onClick={handleBulkPermanentDelete} disabled={bulkLoading}>
+                  <Trash2 className="w-3.5 h-3.5 mr-1" /> Butunlay o'chirish
+                </Button>
+              </div>
+            )}
           <div className="border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl overflow-hidden">
             <table className="w-full text-left text-sm">
               <thead className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200/80 dark:border-zinc-800/80 text-zinc-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider">
                 <tr>
+                  <th className="px-4 py-3 w-10">
+                    <input
+                      type="checkbox"
+                      className="rounded cursor-pointer"
+                      checked={archivedUsers.length > 0 && archivedUsers.every((u) => selectedArchiveIds.has(u._id))}
+                      onChange={(e) => {
+                        setSelectedArchiveIds(e.target.checked ? new Set(archivedUsers.map((u) => u._id)) : new Set());
+                      }}
+                    />
+                  </th>
                   <th className="px-4 py-3">F.I.SH</th>
                   <th className="px-4 py-3">Login</th>
                   <th className="px-4 py-3">Rol</th>
@@ -586,6 +694,14 @@ export default function UsersPage() {
               <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                 {archivedUsers.map((u) => (
                   <tr key={u._id}>
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        className="rounded cursor-pointer"
+                        checked={selectedArchiveIds.has(u._id)}
+                        onChange={() => toggleSelected(setSelectedArchiveIds, u._id)}
+                      />
+                    </td>
                     <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-50">{u.first_name} {u.last_name}</td>
                     <td className="px-4 py-3 font-mono text-xs text-zinc-500 dark:text-zinc-400">{u.login}</td>
                     <td className="px-4 py-3">
@@ -614,6 +730,7 @@ export default function UsersPage() {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </Modal>
     </div>
